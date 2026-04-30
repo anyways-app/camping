@@ -1,0 +1,212 @@
+import type { Card } from "@/lib/types";
+
+// Camp King mock feed. Images are deterministic gradient-on-emoji placeholders
+// generated as inline SVG data URLs, so this UI shell needs no network and no
+// pre-shipped image assets.
+
+const gradientCardImage = (
+  topColor: string,
+  bottomColor: string,
+  emoji: string,
+): string => {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000">
+    <defs>
+      <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="${topColor}"/>
+        <stop offset="100%" stop-color="${bottomColor}"/>
+      </linearGradient>
+    </defs>
+    <rect width="800" height="1000" fill="url(#g)"/>
+    <text x="400" y="540" text-anchor="middle" font-size="280" dominant-baseline="middle">${emoji}</text>
+  </svg>`;
+  return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+};
+
+const baseCounts = {
+  bookmark: 0,
+  firewood: 0,
+  match: 0,
+  lol: 0,
+  forward: 0,
+};
+
+export const MOCK_CARDS: Card[] = [
+  {
+    id: "c1",
+    authorId: "u-alex",
+    authorDisplayName: "Alex Pinecone",
+    createdAt: "2026-04-29T18:30:00Z",
+    imageUrl: gradientCardImage("#0b3d2e", "#0a0a0a", "🏕️"),
+    imageOrigin: "camera",
+    captionText: "First night out at Heartwood Ridge. Stars are loud tonight.",
+    captionMode: "below",
+    tags: ["camping"],
+    borderKind: "direct_contact",
+    sensors: {
+      elevationM: 1842,
+      ambientTempC: 4,
+      ambientTempSource: "weather_api",
+    },
+    counts: { ...baseCounts, firewood: 24, lol: 3, bookmark: 6 },
+  },
+  {
+    id: "c2",
+    authorId: "u-sam",
+    authorDisplayName: "Sam Birchwood",
+    createdAt: "2026-04-29T16:00:00Z",
+    imageUrl: gradientCardImage("#1e3a8a", "#312e81", "🌌"),
+    imageOrigin: "camera",
+    captionText: "Bortle 2 skies. Milky way naked-eye for the first time.",
+    captionMode: "overlay",
+    overlayLayout: {
+      x: 0.5,
+      y: 0.85,
+      fontSize: 44,
+      color: "#ffffff",
+      fontWeight: 700,
+    },
+    tags: ["camping"],
+    borderKind: "default",
+    counts: { ...baseCounts, firewood: 142, lol: 18, bookmark: 31, forward: 12 },
+  },
+  {
+    id: "c3",
+    authorId: "u-system",
+    authorDisplayName: "Camp King",
+    createdAt: "2026-04-30T08:00:00Z",
+    imageUrl: gradientCardImage("#7f1d1d", "#1c0a0a", "📢"),
+    imageOrigin: "gallery",
+    captionText:
+      "Heads up: a thunderstorm cell is moving through the Wind River range tonight. Stake down your fly.",
+    captionMode: "below",
+    tags: ["camping"],
+    borderKind: "system",
+    counts: { ...baseCounts, bookmark: 88 },
+  },
+  {
+    id: "c4",
+    authorId: "u-rita",
+    authorDisplayName: "Rita Cedarwood",
+    createdAt: "2026-04-29T13:15:00Z",
+    imageUrl: gradientCardImage("#365314", "#14532d", "🔥"),
+    imageOrigin: "camera",
+    captionText: "Three-log lay. No paper, no liquid. First strike. King moves only.",
+    captionMode: "below",
+    tags: ["camping"],
+    borderKind: "direct_contact",
+    sensors: { elevationM: 1190, trailLengthM: 8400 },
+    counts: { ...baseCounts, firewood: 217, lol: 41, forward: 18 },
+  },
+  {
+    id: "c5",
+    authorId: "u-thatcher",
+    authorDisplayName: "Thatcher (forwarded by Sam)",
+    createdAt: "2026-04-28T22:40:00Z",
+    imageUrl: gradientCardImage("#581c87", "#0a0a0a", "🏔️"),
+    imageOrigin: "lidar_ai",
+    captionText: "Made with LiDAR — Wind River dawn, Pro phone fantastical.",
+    captionMode: "below",
+    tags: ["camping"],
+    borderKind: "forwarded",
+    forwardedFromUserId: "u-sam",
+    forwardedFromDisplayName: "Sam Birchwood",
+    sensors: { elevationM: 3120 },
+    counts: { ...baseCounts, firewood: 9, bookmark: 2 },
+  },
+  {
+    id: "c6",
+    authorId: "u-merch-ridgeline",
+    authorDisplayName: "Ridgeline Outfitters",
+    createdAt: "2026-04-30T11:00:00Z",
+    imageUrl: gradientCardImage("#92400e", "#451a03", "🎒"),
+    imageOrigin: "gallery",
+    captionText: "Restocked the 65L Cascade — last year's price held through May.",
+    captionMode: "below",
+    tags: ["camping"],
+    borderKind: "merchant",
+    counts: { ...baseCounts, firewood: 4, match: 11 },
+  },
+  {
+    id: "c7",
+    authorId: "u-jules",
+    authorDisplayName: "Jules Mossback",
+    createdAt: "2026-04-29T09:45:00Z",
+    imageUrl: gradientCardImage("#155e75", "#083344", "🛶"),
+    imageOrigin: "camera",
+    captionText: "Found a hand-paddled portage. Asking — has anyone come through here in the last week?",
+    captionMode: "below",
+    tags: ["camping"],
+    borderKind: "friend_of_friend",
+    sensors: { compassHeadingDeg: 287, ambientTempC: 11, ambientTempSource: "sensor" },
+    counts: { ...baseCounts, firewood: 7, bookmark: 3 },
+  },
+  {
+    id: "c8",
+    authorId: "u-ad-flintco",
+    authorDisplayName: "Flintco Tools",
+    createdAt: "2026-04-30T07:00:00Z",
+    imageUrl: gradientCardImage("#3f3f46", "#18181b", "🪓"),
+    imageOrigin: "gallery",
+    captionText: "Sponsored — the Hatchet 12 is back in stock at every Flintco regional.",
+    captionMode: "below",
+    tags: ["camping"],
+    borderKind: "ad",
+    counts: { ...baseCounts, match: 28 },
+  },
+  {
+    id: "c9",
+    authorId: "u-mira",
+    authorDisplayName: "Mira Tannenbaum",
+    createdAt: "2026-04-29T20:10:00Z",
+    imageUrl: gradientCardImage("#1f2937", "#111827", "🌙"),
+    imageOrigin: "camera",
+    captionText: "One pot. Lentils, smoked salt, the last of the bay leaves. Nothing ever tasted better.",
+    captionMode: "overlay",
+    overlayLayout: { x: 0.5, y: 0.12, fontSize: 36, color: "#fde68a", fontWeight: 600 },
+    tags: ["camping"],
+    borderKind: "direct_contact",
+    sensors: { elevationM: 980 },
+    counts: { ...baseCounts, firewood: 88, lol: 6, bookmark: 14 },
+  },
+  {
+    id: "c10",
+    authorId: "u-pax",
+    authorDisplayName: "Pax Driftwood",
+    createdAt: "2026-04-29T15:55:00Z",
+    imageUrl: gradientCardImage("#064e3b", "#022c22", "🌲"),
+    imageOrigin: "camera",
+    captionText: "Trail report: blowdowns at mile 4 are clear. Thanks to whoever brought a saw.",
+    captionMode: "below",
+    tags: ["camping"],
+    borderKind: "direct_contact",
+    sensors: { trailLengthM: 12300, elevationM: 1620 },
+    counts: { ...baseCounts, firewood: 33, forward: 5 },
+  },
+  {
+    id: "c11",
+    authorId: "u-ev",
+    authorDisplayName: "Ev Nightjar",
+    createdAt: "2026-04-30T05:25:00Z",
+    imageUrl: gradientCardImage("#831843", "#4a044e", "🦉"),
+    imageOrigin: "camera",
+    captionText: "Heard a barred owl all night. Counter-call worked once. King of the campground for one minute.",
+    captionMode: "below",
+    tags: ["camping"],
+    borderKind: "friend_of_friend",
+    counts: { ...baseCounts, firewood: 19, lol: 22 },
+  },
+  {
+    id: "c12",
+    authorId: "u-tomo",
+    authorDisplayName: "Tomo Quinzhee",
+    createdAt: "2026-04-28T11:00:00Z",
+    imageUrl: gradientCardImage("#0f172a", "#020617", "❄️"),
+    imageOrigin: "camera",
+    captionText: "Built a quinzhee in 90 minutes. Sleeping in it tonight if it doesn't collapse.",
+    captionMode: "below",
+    tags: ["camping"],
+    borderKind: "direct_contact",
+    sensors: { ambientTempC: -8, ambientTempSource: "weather_api" },
+    counts: { ...baseCounts, firewood: 61, lol: 28, match: 4 },
+  },
+];
