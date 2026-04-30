@@ -44,6 +44,21 @@ A genuinely novel image-creation path that justifies bringing AI image generatio
 - **Failure path.** If nano banana fails or moderation rejects the output, the user is offered the original RGB photo to post instead, with no charge counted against the daily limit.
 - **Scope of nano banana in v1.** This is the **only** v1 use of nano banana. The general "describe an image and generate" flow remains deferred per core.
 
+## LiDAR Night Sight (iOS Pro only — safety / utility feature)
+
+A pure utility feature that uses LiDAR's ability to see in zero light (it emits its own IR) to give campers a usable view of their immediate surroundings at a dark campsite. Same hardware gate as fantastical mode, but a different code path — real-time render, no AI, no card creation in v1.
+
+- **Why this matters for camping.** Campsites are often poorly lit; the iPhone's regular camera is useless in real darkness; flashlights destroy night vision. LiDAR is the only on-device sensor that produces a usable image in zero light because it actively emits IR pulses and measures return time.
+- **Hardware gate.** Same runtime check as fantastical mode (`builtInLiDARDepthCamera`). Hide the entry point on non-LiDAR devices.
+- **What the user sees.** Full-screen real-time render of the LiDAR depth field, artificially colored (proposed default: distance-banded palette — close = warm yellow, mid = cyan, far = deep blue, beyond range = black). Optional alternate palettes (high-contrast monochrome for accessibility, "campfire" warm gradient).
+- **Implementation.** Custom Expo native module wrapping a SwiftUI / Metal / RealityKit view that consumes the `AVCaptureSession` LiDAR stream. Cannot be done in pure RN. Estimate: 1–2 weeks of focused iOS native work, beyond the RN baseline used elsewhere in v1.
+- **Session-based, never always-on.** Big "Start Night Sight" button; "Stop" button to exit. Auto-timeout after 5 minutes of continuous use to limit battery drain. Per-session battery-impact telemetry to a private analytics table so we can tune.
+- **Range disclosure (mandatory UX).** A persistent on-screen badge reads "LiDAR range ≈ 5m" so users don't trust it for distant hazards. First-launch dialog: "Night Sight reveals your immediate surroundings (within about 5 metres). It is not a substitute for a flashlight when scanning for wildlife or distant terrain."
+- **Auto-suggest trigger (nice-to-have).** When the ambient light sensor (`AVCaptureDevice.iso` or the dedicated ambient light reading) falls below a darkness threshold, surface a non-blocking "Night Sight available" toast on the feed. Easy add on top of the core feature.
+- **No card creation in v1.** Night Sight is a navigation tool, not a content tool. v2 candidates (see core deferred list items 12 and 13): a Night-Sight → fantastical bridge for posting; a **Gaussian Splatting** upgrade that accumulates LiDAR + RGB into an incremental on-device splat for a much wider perceived FOV than raw point-cloud. The bridge and the splat upgrade are **not** in v1.
+- **Permissions.** Camera permission only (`NSCameraUsageDescription`). Already declared for the regular capture flow.
+- **Reject for App Store review risk.** Be explicit in the App Store description that Night Sight is a short-range visualization aid, not a safety device — pre-empt any "your app told me I could see in the dark and I got hurt" complaint.
+
 ## Casting (v1)
 
 - **Screen Mirroring to AirPlay receiver only.** No app-side AirPlay code; users initiate via Control Center → Screen Mirroring.

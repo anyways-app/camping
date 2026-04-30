@@ -168,6 +168,8 @@ Each requires its own design pass.
 9. AI image generation from a text prompt (general-purpose nano banana flow). Note: a **narrow** AI-image flow exists in v1 on iOS Pro only — the LiDAR fantastical mode (see iOS addendum). The general "describe an image" flow is still deferred.
 10. Native cast-stream support (replacing v1 mirror-the-screen)
 11. Native iOS/Android rebuild if React Native proves limiting
+12. **Gaussian Splatting — Night Sight v2.** Accumulate a few seconds of LiDAR + RGB into an incremental on-device 3D Gaussian Splat (SplaTAM / MonoGS-style) and render artificially-coloured novel views, giving a wider perceived field of view than v1's raw ~5m point-cloud. Bleeding-edge on mobile; needs research-grade pipelines to mature.
+13. **Gaussian Splatting — Splat Cards.** A new card type. The author records a 30–60s walk-around (frames + depth + IMU); a cloud GPU service trains a 3DGS scene; recipients can orbit / pan the result in-feed. Cost per scene: ~$0.05–0.50 GPU + ~10–100 MB storage + bandwidth. Requires a new infra surface (training queue, GPU workers, splat CDN, in-app GS viewer). iOS Pro only at first; Android with ToF / ARCore Depth in a later wave.
 
 ## Verification (cross-platform end-to-end)
 
