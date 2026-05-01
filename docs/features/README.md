@@ -55,14 +55,45 @@ Updated as features are drafted. Three states:
 - **Drafted** — first pass complete, awaiting product review.
 - **Reviewed** — locked. Changes need a follow-up review.
 
-Currently drafted (2 of 110):
+Currently drafted (32 of 110):
 
 | FEAT | Name | Status | Last reviewed |
 |---|---|---|---|
+| FEAT-001 | Troops as account container | Drafted | 2026-05-01 |
+| FEAT-002 | Single troop leader | Drafted | 2026-05-01 |
+| FEAT-003 | Sub-profiles under a troop | Drafted | 2026-05-01 |
+| FEAT-004 | Profile picker on launch | Drafted | 2026-05-01 |
+| FEAT-005 | Leader profile PIN | Drafted | 2026-05-01 |
+| FEAT-006 | Optional protected sub-profile PIN | Drafted | 2026-05-01 |
+| FEAT-007 | Per-sub-profile feature gate matrix | Drafted | 2026-05-01 |
+| FEAT-008 | ToS attestation — 13+ for every profile | Drafted | 2026-05-01 |
+| FEAT-009 | Troop leader feature gate management UI | Drafted | 2026-05-01 |
+| FEAT-010 | Verified-kids tier (deferred) | Drafted | 2026-05-01 |
+| FEAT-011 | Co-leadership and ownership transfer (deferred) | Drafted | 2026-05-01 |
+| FEAT-012 | Larger troops / tiered offering (deferred) | Drafted | 2026-05-01 |
+| FEAT-013 | Per-profile social graph | Drafted | 2026-05-01 |
 | FEAT-017 | Troop-wide contact sharing | Drafted (seed) | 2026-05-01 |
+| FEAT-018 | Privacy invariant — uploader-only + 2 leader exceptions | Drafted | 2026-05-01 |
+| FEAT-019 | Trips section in app navigation | Drafted | 2026-05-01 |
+| FEAT-020 | Trip creation by troop leader | Drafted | 2026-05-01 |
+| FEAT-021 | Trip metadata fields (v1) | Drafted | 2026-05-01 |
+| FEAT-022 | Trip lifecycle (draft / active / ended) | Drafted | 2026-05-01 |
+| FEAT-023 | Invite other troop leaders to a trip | Drafted | 2026-05-01 |
+| FEAT-024 | Accept trip invite | Drafted | 2026-05-01 |
+| FEAT-025 | Trip creator role | Drafted | 2026-05-01 |
+| FEAT-026 | Trip co-leader promotion | Drafted | 2026-05-01 |
+| FEAT-027 | Trip-shared contact list | Drafted | 2026-05-01 |
+| FEAT-028 | Share with this trip toggle | Drafted | 2026-05-01 |
+| FEAT-029 | Sub-profile per-trip visibility override | Drafted | 2026-05-01 |
+| FEAT-030 | Trip participation feature gate | Drafted | 2026-05-01 |
+| FEAT-031 | Forwarding-gate strictness on trips | Drafted | 2026-05-01 |
+| FEAT-032 | Trip privacy boundaries | Drafted | 2026-05-01 |
+| FEAT-033 | Trip features beyond v1 metadata (deferred) | Drafted | 2026-05-01 |
+| FEAT-034 | Trip creator transfer / co-creator (deferred) | Drafted | 2026-05-01 |
 | FEAT-061 | Forward picker modal | Drafted (seed) | 2026-05-01 |
+| FEAT-090 | Camp Atlas (deferred) | Drafted | 2026-05-01 |
 
-A full status table covering all 110 will be maintained here as drafting proceeds; for now the CSV is the index.
+A full status table covering all 110 will be maintained here as drafting proceeds; the remaining ~78 are in the inherited / supporting feature set (sensors, auth, casting, platform plumbing, strategic v2+ items) and can be drafted in subsequent batches per the suggested order above.
 
 ## After drafting is complete
 
