@@ -21,8 +21,10 @@ A Camp King account is a **troop** — a grouping of associated people represent
 
 ### Roles
 
-- **Troop leader.** Adult human who owns the troop. Holds billing, owns security (password reset, MFA), sets per-sub-profile feature gates, manages the master contact list, can share specific contacts down to the troop, can promote a sub-profile to leader / co-leader. Phone OTP and OAuth identities (Apple, Google) belong to the leader.
+- **Troop leader.** Adult human who owns the troop. Holds billing, owns security (password reset, MFA), sets per-sub-profile feature gates, manages the master contact list, and can share specific contacts down to the troop. Phone OTP and OAuth identities (Apple, Google) belong to the leader. **v1: exactly one leader per troop**; the role is a singleton, not a set. Co-leadership and ownership transfer to another adult identity are deferred to v2 (see deferred list).
 - **Sub-profile.** Any other profile under the troop. The leader chooses who gets a sub-profile. Sub-profiles have no platform-level age classification — the leader decides who they hand a sub-profile to, and bears responsibility per the ToS attestation in "Audience & branding."
+
+**v1 troop size limit.** Up to **6 sub-profiles per troop**, in addition to the troop leader (so 7 profiles maximum per troop). Matches Apple Family / Netflix-style household sizing for v1. Larger troops (scout-style, extended families, etc.) are deferred to a v2+ tiered offering.
 
 ### Profile-switching auth
 
@@ -266,6 +268,10 @@ Each requires its own design pass.
     **Why this matters strategically.** The by-product of free use of the app is a proprietary, growing geo-spatial dataset of camping locations that is hard for any competitor to bootstrap. The same capability lowers friction for new users joining an existing group — they instantly see splatted scenes of their friends' favourite spots without ever having been there.
 
     **Privacy invariant impact.** Camp Atlas introduces a new RLS surface (`site_captures`, `site_captures_distribution`) separate from the `cards` table. Default visibility is the capturer's mutual-contact graph; broader-audience surfaces are gated by an explicit `distribution_tier` row, not by inheriting card-level RLS rules.
+
+15. **Co-leadership and ownership transfer.** v1 limits a troop to a single leader (see "Troops & profiles" → Roles). v2 will introduce: **co-leadership**, where two or more adult identities share leader privileges (with a defined conflict-resolution rule when opposing setting changes collide); and **ownership transfer**, where the existing leader hands the troop off to another adult identity in a one-way move. Both have material auth, billing, security, and audit-trail implications that warrant their own design pass.
+
+16. **Larger troops / tiered offering.** v1 caps a troop at 6 sub-profiles (7 profiles total). v2 may introduce a higher-tier troop sized for scout troops, extended families, classroom cohorts, etc. Tiered pricing, larger contact-import quotas, and possibly a "leader of leaders" structure (federated troops) come with this work.
 
 ## Verification (cross-platform end-to-end)
 
