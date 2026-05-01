@@ -54,6 +54,7 @@ The leader manages a feature toggle matrix per sub-profile. Defaults below are t
 | Camp Atlas capture (v2) | **Off** (only the leader captures and grants the licence) |
 | Direct messages (v2) | **Off** |
 | Slideshow / TV cast | On |
+| Trip participation | On (per-trip override available — see "Trips" → Sub-profile visibility) |
 
 ### Troop-wide contact sharing
 
@@ -92,7 +93,79 @@ The social graph is **per-profile, not per-troop**. Each profile has its own con
 
 - **Mutual-discovery only.** Two profiles see each other in-app only if **both** uploaded the other's contact info **and** both are registered.
 - **One-hop visibility, registered profiles only.** A profile can toggle "let X see who I'm connected to" per friend. When on, X sees a sub-list under that profile's name showing only the *registered profiles* X doesn't already know — never raw uploaded contacts. No further hops. One-hop grants are not transferable across sibling profiles in the same troop.
-- **Raw uploaded contacts are never visible to anyone but the uploader, with one explicit exception:** the troop leader may toggle individual contacts from their own contact list as "Share with troop," exposing those specific contacts (display name + match-eligible phone hash) to every profile in the same troop. The shared contact is not informed of the share-down — they only see normal mutual-match visibility if a sub-profile becomes a match. GDPR / CCPA posture preserved: the exception is per-contact, opt-in, leader-only.
+- **Raw uploaded contacts are never visible to anyone but the uploader, with two explicit leader-only exceptions:**
+  1. **Share with troop.** A troop leader may toggle individual contacts from their own contact list as "Share with troop," exposing those specific contacts (display name + match-eligible phone hash) to every profile in the same troop.
+  2. **Share with trip.** A troop leader who is a member of an active multi-troop trip may toggle individual contacts as "Share with this trip," exposing those specific contacts to every profile that is a member of that trip across all joined troops, for as long as the trip is active and the toggle stays on. See "Trips" below for full mechanics.
+
+  In both cases the shared contact is not informed of the share-down — they only see normal mutual-match visibility if a viewer becomes a match. GDPR / CCPA posture preserved: both exceptions are per-contact, opt-in, leader-only, and revocable.
+
+## Trips
+
+Trips are a separate section of the app for multi-troop camping events. A trip groups profiles from multiple troops around a shared event, with its own contact list scoped to the trip and its own lifecycle. Trips do **not** merge troops, share billing, or expose either troop's master contact list or per-sub-profile feature-gate matrix to the other troop. Each joined troop keeps its identity, leader, and gates intact. The trip is purely a temporary multi-troop sharing surface.
+
+### Lifecycle
+
+1. **Create.** A troop leader creates a trip from the Trips section. Required: a name. Optional: dates, location text, description, cover image. Initial status: `draft`.
+2. **Invite.** The trip creator (or any trip co-leader) invites *other troop leaders* by phone number / username. Each invited troop appears with `status = invited` until that troop's leader accepts.
+3. **Accept.** The invited troop's leader accepts; their troop joins the trip. All sub-profiles in that troop become trip members by default — the troop's leader can opt specific sub-profiles out via the per-trip override on the "Trip participation" feature gate.
+4. **Active.** Once any troop accepts, the trip is `active`. Members can browse the trip page, see the trip-shared contact list, and (subject to feature gates) participate.
+5. **Ended.** The trip creator or any trip co-leader can mark the trip `ended`. The trip moves to a read-only archive: no new invites, no new shared contacts, no new shares. Historical visibility is preserved for participants.
+
+### Roles within a trip
+
+- **Trip creator.** The troop leader who created the trip. Always exactly one. Has full authority over trip settings, invites, co-leader promotion, and lifecycle. Trip creator status is not transferable in v1 — if the creator's troop leaves the trip, the trip ends.
+- **Trip co-leader.** A troop leader (from a *joined* troop) promoted by the trip creator to share trip-management privileges. Can invite further troops, edit trip metadata, share contacts to the trip, and end the trip. Cannot demote the creator. Multiple co-leaders are permitted.
+- **Trip member.** Any profile (leader or sub-profile) belonging to a joined troop, with that troop's leader's per-trip "Trip participation" toggle on. Can see the trip metadata, the trip-shared contact list, and the member roster. Cannot edit trip settings, invite, or share contacts unless they are the trip creator or a trip co-leader.
+
+Trip-level co-leadership is **scoped to the trip only**. It does not affect any troop's internal leader, billing, security, or master contact list — see "Privacy boundaries" below. This is distinct from troop co-leadership (deferred to v2 per item 15); a trip co-leader still leads exactly one troop of their own.
+
+### Trip-shared contact list
+
+Each trip has its own shared contact list, separate from any troop's master list and separate from any individual profile's contact list.
+
+- Any troop leader on the trip (creator, co-leader, or simply a joined-troop leader) can flick "**Share with this trip**" on individual contacts in their *own* master contact list. Bulk share supported.
+- The shared contact appears in every trip member's view under "**Trip contacts: [Trip name]**" — distinct from the profile's own contacts and from any "Shared by [Leader]" segment within their own troop.
+- Toggle is live and revocable: flip off → contact disappears from the trip's shared list on next refresh.
+- Mutual-discovery rules unchanged. A trip-shared contact only becomes a *match* (with the dark-green direct-contact border) for a given trip member if both sides have uploaded each other and are both registered. Sharing into the trip only adds the contact to each member's mutual-discovery candidate pool.
+
+### Sub-profile visibility
+
+When a troop joins a trip, all sub-profiles in that troop become trip members by default (their per-trip override matches the troop-level "Trip participation" gate, which defaults to On). The troop's leader can deselect specific sub-profiles per trip from a "Trip visibility" panel inside that sub-profile's settings. A deselected sub-profile does not see the trip in their Trips list, does not see the trip-shared contact list, and is not enumerated to other trip members.
+
+### Forwarding-gate interaction
+
+A sub-profile's "**Forward outside the troop**" gate is **not** loosened by trip membership. Other trip members and trip-shared contacts both count as "outside the troop" for forwarding purposes. If a leader wants their sub-profile to forward into the trip context, they flip the gate on for that sub-profile — there is no separate "forward within trip" gate in v1.
+
+### Privacy boundaries
+
+- Joining a trip does **not** merge troops, share billing, or expose either troop's master contact list, sub-profile roster, or feature-gate matrix to the other troop.
+- A trip member can see the *display names and avatars* of other trip members and the contents of the trip's shared contact list. They cannot see another troop's full member roster outside the trip context, nor any sub-profile of another troop whose leader has set "Trip visibility" off for that sub-profile.
+- The "Share with this trip" toggle is the sole mechanism for exposing contacts across troops on a trip. Master contact lists remain leader-private.
+- Trip-shared contacts are scoped to the trip's active window only. When a trip ends, its shared contacts no longer enter members' mutual-discovery pools and the trip-contacts segment becomes read-only in the archive view.
+
+### v1 trip metadata
+
+Customizable per trip; only `name` is required.
+
+| Field | Type | Notes |
+|---|---|---|
+| `name` | text | required |
+| `description` | text | optional, multi-line |
+| `location_text` | text | optional, free-form (e.g., "Wind River Range, WY") |
+| `start_date` | date | optional |
+| `end_date` | date | optional |
+| `cover_image_url` | text | optional |
+| `status` | enum | `draft` \| `active` \| `ended` |
+
+Trip-filtered feed views, trip geo-polygons, itineraries, RSVPs, packing lists, post-trip albums, public / discoverable trips, and trip-specific flair frames are deferred — see deferred list.
+
+### Schema sketch
+
+- `trips` (id, name, created_by_troop_id, created_by_profile_id, description, location_text, start_date, end_date, cover_image_url, status, created_at).
+- `trip_troops` (trip_id, troop_id, joined_by_profile_id, status [invited / accepted / declined / left], invited_at, responded_at).
+- `trip_co_leaders` (trip_id, profile_id) — `profile_id` is always a troop leader's id.
+- `trip_shared_contacts` (trip_id, contact_id, shared_by_profile_id, shared_at).
+- `trip_profile_visibility` (trip_id, profile_id, visible) — default `visible = true`; the troop's leader sets `false` to opt a sub-profile out of a trip.
 
 ## Auth
 
@@ -113,6 +186,11 @@ Auth identities live at the **troop** level, not the profile level. There is one
   - `cards`: visible based on the social graph of the *viewing profile* (direct contact, FoF if grant exists, public for ads / system messages).
   - `troop_shared_contacts`: readable by every profile in the troop; writable only by the leader profile.
   - `profile_feature_gates`: readable by the profile and the leader; writable by the leader only.
+  - `trips`: readable by every profile that is a member of the trip (joined troop ∩ `trip_profile_visibility.visible = true`); writable by the trip creator and trip co-leaders.
+  - `trip_troops`: readable by every profile in any joined troop on the trip; insert by trip creator / co-leaders, status update by the invited troop's leader.
+  - `trip_co_leaders`: readable by every trip member; writable by the trip creator only.
+  - `trip_shared_contacts`: readable by every visible trip member; writable by any troop leader who is a member of the trip.
+  - `trip_profile_visibility`: readable by the affected sub-profile and that troop's leader; writable by that troop's leader only.
 
 ## The card (data model)
 
@@ -273,6 +351,10 @@ Each requires its own design pass.
 
 16. **Larger troops / tiered offering.** v1 caps a troop at 6 sub-profiles (7 profiles total). v2 may introduce a higher-tier troop sized for scout troops, extended families, classroom cohorts, etc. Tiered pricing, larger contact-import quotas, and possibly a "leader of leaders" structure (federated troops) come with this work.
 
+17. **Trip features beyond v1 metadata.** v1 trips are a multi-troop contact-sharing surface with simple metadata (name, dates, location text, description, cover image, status). Deferred to v2+: trip-filtered feed views (show only cards from current-trip members), trip geo-polygons replacing free-form `location_text`, itineraries / activity sub-boards, packing checklists, per-profile RSVPs, post-trip albums and wrap-ups, trip-specific flair frames, and **public / discoverable trips** joinable beyond the invitation-only model. Each is its own design pass; v1 keeps trips intentionally minimal.
+
+18. **Trip creator transfer / trip co-creator.** v1 hard-codes a single non-transferable trip creator (if their troop leaves, the trip ends). v2 may introduce trip creator transfer to a co-leader, and possibly a "co-creator" tier with elevated privileges short of full creator status.
+
 ## Verification (cross-platform end-to-end)
 
 Run on each client before declaring v1 done. Each named "profile" below belongs to its own troop unless stated otherwise.
@@ -299,9 +381,21 @@ Run on each client before declaring v1 done. Each named "profile" below belongs 
 17. Block / report on a sub-profile is never gated: confirm the option is present on every long-press menu in B1, regardless of any feature toggle.
 18. Switch from B1 back to the leader profile via the "Switch profile" entry; confirm the leader's PIN is required and the active session token re-scopes to the leader profile.
 
+### Trip-specific verification
+
+19. Leader A creates a trip "Wind River 2026" with a name and start / end dates. Trip appears in A's Trips list with status = `draft`.
+20. Leader A invites troop 2 (whose leader is B). B sees an invitation entry in B's Trips list. B accepts; trip status flips to `active`. All sub-profiles in troop 2 with default `Trip participation = On` see the trip in their Trips list.
+21. Leader B toggles "Share with this trip" on a contact in B's master contact list. The contact appears in the trip's shared contact list, visible to every trip member across both joined troops, under the segment "Trip contacts: Wind River 2026."
+22. Leader B unshares the same contact; it disappears from the trip's shared list within one refresh cycle.
+23. As leader of troop 2, set "Trip visibility" for sub-profile B1 to **off** for this trip. Switch to B1; confirm the trip does not appear in B1's Trips list and the trip-shared contacts are not visible to B1. Confirm B1 is not enumerated to other trip members.
+24. Leader A promotes Leader B to trip co-leader. Confirm B can now invite a third troop and edit the trip's metadata. Confirm B cannot demote Leader A.
+25. Confirm a trip-shared contact appears as a *match* (dark-green direct-contact border) only when both that contact and the viewing trip member have uploaded each other and are both registered — not merely because the contact is in the trip-shared list.
+26. Trip lifecycle: leader A marks the trip `ended`. Confirm no new invites, contacts, or shares are accepted; existing trip-shared contacts remain visible historically to participants in a read-only archive.
+
 Automated test floor:
 - Unit tests for the contact-matching algorithm (mutual-only + one-hop registered-only invariants, profile-pair-keyed).
 - Unit tests for the troop-shared-contacts visibility rule (leader toggle on → sibling profiles see; off → siblings do not see; toggling does not leak unshared contacts; one-hop grants do not transfer across siblings).
-- Unit tests for the per-sub-profile feature-gate matrix (block / report always on regardless of toggles; defaults match the spec table).
+- Unit tests for the trip-shared-contacts visibility rule (visible only to trip members across joined troops; invisible to sub-profiles whose leader has set `trip_profile_visibility = false`; goes read-only when trip ends).
+- Unit tests for the per-sub-profile feature-gate matrix (block / report always on regardless of toggles; defaults match the spec table; "Forward outside the troop = off" still blocks forwarding to fellow trip members).
 - Snapshot / visual tests for each of the 7 border kind + pattern combos.
 - E2E: Playwright (web), Detox or Maestro (mobile).
