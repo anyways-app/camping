@@ -12,29 +12,105 @@ When something appears in this file, it is binding on **all three** clients. Add
 
 ## Audience & branding
 
-- **Minimum age 13+.** No kids mode, no parental-consent flow. Standard 13+ social-platform ToS.
+- **Minimum age 13+ for every user of every profile**, attested by the troop leader at troop creation. Camp King does not classify any profile as a kids profile; the platform has no kids mode and no parental-consent flow at the platform level. See "Troops & profiles" below for the troop / sub-profile model. A v2+ verified-kids tier is in the deferred list.
 - **Voice: fun, playful, camping-mastery + camaraderie.** No political framing. Tone: campfire warmth, gentle ribbing, badge-of-honor mastery.
+
+## Troops & profiles
+
+A Camp King account is a **troop** — a grouping of associated people represented by the profiles set up under it. The troop holds billing, security, and master-level controls; the profiles do the actual social-product work (post cards, hold contacts, receive cards in their feed). Netflix shape: one account, multiple profiles, profile picker on launch.
+
+### Roles
+
+- **Troop leader.** Adult human who owns the troop. Holds billing, owns security (password reset, MFA), sets per-sub-profile feature gates, manages the master contact list, can share specific contacts down to the troop, can promote a sub-profile to leader / co-leader. Phone OTP and OAuth identities (Apple, Google) belong to the leader.
+- **Sub-profile.** Any other profile under the troop. The leader chooses who gets a sub-profile. Sub-profiles have no platform-level age classification — the leader decides who they hand a sub-profile to, and bears responsibility per the ToS attestation in "Audience & branding."
+
+### Profile-switching auth
+
+- Avatar grid on app launch (Netflix-style). Tap an avatar to enter that profile.
+- The **leader's profile** always requires a PIN (set by the leader at troop creation, resettable via the OAuth / OTP identity).
+- Any sub-profile the leader marks "**protected**" also requires a PIN. Default: not protected.
+- Device remembers the last-active profile to skip the picker on subsequent launches; "Switch profile" is always one tap away from anywhere in the app.
+- All non-PIN actions (post a card, send a forward, etc.) execute as the active profile, never the leader implicitly.
+
+### Per-sub-profile feature gates
+
+The leader manages a feature toggle matrix per sub-profile. Defaults below are the **starting state for a newly-created sub-profile**; the leader can flip any of them. If the leader flips everything on, a sub-profile is effectively a peer adult — the model stays flexible, with no hard "junior" tier.
+
+| Feature | Default for new sub-profile |
+|---|---|
+| Post cards | On |
+| Receive cards in feed | On |
+| Receive forwards from outside the troop | On |
+| Forward outside the troop | **Off** |
+| Long-press: block / report | **On (always — never gateable)** |
+| Contact CSV import | **Off** (leader can enable, or pre-share via troop-shared list) |
+| Voice clip recording | **Off** |
+| Geo capture on posts | **Off** |
+| Merchant card visibility | **Off** |
+| Ad card visibility | **Off** |
+| LiDAR fantastical (iOS Pro) | On |
+| Camp Atlas capture (v2) | **Off** (only the leader captures and grants the licence) |
+| Direct messages (v2) | **Off** |
+| Slideshow / TV cast | On |
+
+### Troop-wide contact sharing
+
+The leader can expose specific contacts from their own contact list down to every profile in the troop, by flicking a per-row "**Share with troop**" toggle on the leader's contact-list screen. This is the controlled exception to the "raw uploaded contacts are never visible to anyone but the uploader" invariant — see "Social graph & privacy" below.
+
+UX:
+
+- Sub-profiles see their contact list in two segments:
+  1. **My contacts** — what the sub-profile imported themselves.
+  2. **Shared by [Leader display name]** — leader-toggled subset, visually distinct (separate header, accent colour). Sub-profiles never see leader contacts that aren't toggled on.
+- Bulk share supported: leader can multi-select rows and "Share these N with the troop."
+- Toggle is live and revocable: flip off → contact disappears from every sub-profile's shared segment on next refresh.
+- Dedup: if a sub-profile already has the contact themselves *and* the leader has shared them, the leader-shared segment wins for display (it's the higher-trust source of the relationship).
+
+Mutual-discovery and border kinds:
+
+- A leader-shared contact enters a sub-profile's mutual-discovery candidate pool. They become a *match* (and earn the dark-green direct-contact border on their cards in that sub-profile's feed) only if both sides are registered and have each other.
+- The "Shared by Leader" label persists on the contact-list row regardless of match status.
+- Forwarding gates apply uniformly: a leader-shared contact is "outside the troop" for the "forward outside the troop" gate, since they are a real external person, not another sub-profile in the same troop.
+
+### Schema sketch
+
+Full table designs land in the backend doc. Conceptual shape:
+
+- `troops` (id, billing_identity_id, leader_profile_id, created_at).
+- `profiles` (id, troop_id, display_name, avatar_url, role, pin_hash NULL, protected_bool, created_at).
+- `profile_feature_gates` (profile_id, feature, enabled).
+- `troop_shared_contacts` (troop_id, contact_id, shared_by_profile_id, shared_at).
+- `cards.author_id` references `profiles.id` (not a global user id).
+- `contacts.uploader_profile_id` references `profiles.id`.
+- One-hop grants and contact matches are profile-pair-keyed, not user-pair-keyed; one-hop grants are not transferable across sibling profiles in the same troop.
 
 ## Social graph & privacy
 
-- **Mutual-discovery only.** Two users see each other in-app only if **both** uploaded the other's contact info **and** both are registered.
-- **One-hop visibility, registered users only.** A user can toggle "let X see who I'm connected to" per friend. When on, X sees a sub-list under that user's name showing only the *registered users* X doesn't already know — never raw uploaded contacts. No further hops.
-- **Raw uploaded contacts are never visible to anyone but the uploader.** GDPR/CCPA-defensible posture.
+The social graph is **per-profile, not per-troop**. Each profile has its own contact list, its own mutual-discovery state, its own feed. Profiles in the same troop do not share a social graph by default; the only shared surface is the leader-managed troop-shared contacts segment described above.
+
+- **Mutual-discovery only.** Two profiles see each other in-app only if **both** uploaded the other's contact info **and** both are registered.
+- **One-hop visibility, registered profiles only.** A profile can toggle "let X see who I'm connected to" per friend. When on, X sees a sub-list under that profile's name showing only the *registered profiles* X doesn't already know — never raw uploaded contacts. No further hops. One-hop grants are not transferable across sibling profiles in the same troop.
+- **Raw uploaded contacts are never visible to anyone but the uploader, with one explicit exception:** the troop leader may toggle individual contacts from their own contact list as "Share with troop," exposing those specific contacts (display name + match-eligible phone hash) to every profile in the same troop. The shared contact is not informed of the share-down — they only see normal mutual-match visibility if a sub-profile becomes a match. GDPR / CCPA posture preserved: the exception is per-contact, opt-in, leader-only.
 
 ## Auth
 
-- **Primary: phone-number SMS OTP.** Best match for contact import.
+Auth identities live at the **troop** level, not the profile level. There is one phone-number / Apple ID / Google account per troop, owned by the troop leader.
+
+- **Primary: phone-number SMS OTP.** Best match for contact import. The verified phone number is the leader's.
 - **Alternate: Google OAuth, Apple OAuth.**
-- Provider: Supabase Auth (Twilio/MessageBird routed under the hood).
+- Provider: Supabase Auth (Twilio / MessageBird routed under the hood).
+- After successful auth, the user lands on the **profile picker** (see "Troops & profiles" → "Profile-switching auth"). Profile selection within a troop is handled by avatar tap + optional PIN; it is not a separate Supabase Auth event.
 
 ## Backend
 
 - **Supabase** — managed Postgres, Auth, Storage, Realtime, Edge Functions.
-- **Row-Level Security maps the privacy invariants:**
-  - `contacts`: row owner only.
-  - `contact_matches`: visible to either side of a mutual match.
-  - `one_hop_grants`: controls whether the grantee can see the grantor's registered-friend list.
-  - `cards`: visible based on the social graph (direct contact, FoF if grant exists, public for ads/system).
+- **Row-Level Security maps the privacy invariants.** All ownership keys are `profile_id`, not `user_id` (see "Troops & profiles"):
+  - `contacts`: visible to the uploader profile only, **plus** other profiles in the same troop where a `troop_shared_contacts` row exists for that contact (display name + match-eligible phone hash only — never the raw upload metadata).
+  - `contact_matches`: visible to either side of a mutual match (both keys are profile-ids).
+  - `one_hop_grants`: controls whether the grantee profile can see the grantor profile's registered-friend list. Not transferable across sibling profiles in the same troop.
+  - `cards`: visible based on the social graph of the *viewing profile* (direct contact, FoF if grant exists, public for ads / system messages).
+  - `troop_shared_contacts`: readable by every profile in the troop; writable only by the leader profile.
+  - `profile_feature_gates`: readable by the profile and the leader; writable by the leader only.
 
 ## The card (data model)
 
@@ -43,7 +119,7 @@ A card is the atomic content unit. Schema:
 | Field | Type | Notes |
 |-------|------|-------|
 | `id` | uuid | |
-| `author_id` | uuid | |
+| `author_id` | uuid | references `profiles.id` (not a global user id) |
 | `created_at` | timestamptz | |
 | `image_url` | text | required; every card has an image |
 | `image_origin` | enum | `camera` \| `gallery` \| `lidar_ai` (iOS Pro only — see iOS addendum) |
@@ -52,7 +128,7 @@ A card is the atomic content unit. Schema:
 | `caption_mode` | enum | `below` \| `overlay` |
 | `overlay_layout` | jsonb | x, y, font, color, size when `caption_mode = overlay` |
 | `tags` | text[] | v1 always `["camping"]` |
-| `forwarded_from_user_id` | uuid | nullable |
+| `forwarded_from_profile_id` | uuid | nullable; references `profiles.id` |
 | `geo_point` | geography(Point) | nullable; populated from device GPS when available |
 | `elevation_m` | numeric | nullable; from barometer or GPS |
 | `compass_heading_deg` | numeric | nullable; direction the camera was pointing |
@@ -193,20 +269,33 @@ Each requires its own design pass.
 
 ## Verification (cross-platform end-to-end)
 
-Run on each client before declaring v1 done:
+Run on each client before declaring v1 done. Each named "profile" below belongs to its own troop unless stated otherwise.
 
-1. Sign up two users with different phone numbers; sign in.
-2. Upload a contact CSV on user A containing user B's phone, and vice versa. Both users see each other connected.
-3. User A toggles "expose my contacts" for B. B sees one-hop registered users under A; B never sees A's raw uploaded contacts.
-4. User A creates a card: image → flair → caption → overlay convert → preview → post. Tag chip is `camping` and locked.
-5. User B sees the card with dark-green border + double-line pattern. Long-press shows firewood/match/bookmark/block/report. Swipe-down logs LOL; swipe-up opens forward picker.
-6. User B forwards the card to user C. C sees it with white-border dotted pattern and B's username pinned.
+1. Sign up two **troops** with different phone numbers (each starts with a single leader profile A and B respectively); sign in to both.
+2. Upload a contact CSV on profile A containing profile B's phone, and vice versa. Both profiles see each other connected.
+3. Profile A toggles "expose my contacts" for B. B sees one-hop registered profiles under A; B never sees A's raw uploaded contacts.
+4. Profile A creates a card: image → flair → caption → overlay convert → preview → post. Tag chip is `camping` and locked.
+5. Profile B sees the card with dark-green border + double-line pattern. Long-press shows firewood / match / bookmark / block / report. Swipe-down logs LOL; swipe-up opens forward picker.
+6. Profile B forwards the card to profile C (leader of a third troop). C sees it with white-border dotted pattern and B's username pinned.
 7. 60s idle → slideshow starts; advances every 25s.
 8. Cast (mirror) the feed to a TV from each platform.
 9. Upload triggers an automated moderation flag → post lands in queue, not the public feed.
-10. Report a post as user B → appears in the manual review queue.
+10. Report a post as profile B → appears in the manual review queue.
+
+### Troop-specific verification
+
+11. From the leader profile of troop 1, create a sub-profile B1. B1 appears on the profile picker on next app launch.
+12. PIN-protect sub-profile B1 from the leader's settings panel; confirm B1 cannot be entered without the PIN. Confirm the leader profile always requires its PIN regardless of any toggle.
+13. As leader of troop 1, set "Forward outside the troop" to **Off** for B1. Switch to B1; confirm the swipe-up forward gesture either does nothing or surfaces "Disabled by troop leader." Confirm B1 can still forward to *other profiles within the same troop*.
+14. As leader of troop 1, toggle "Share with troop" on a contact in the leader's contact list. Switch to B1; confirm the contact appears in B1's contact list under "Shared by [Leader display name]" and not in B1's "My contacts" segment.
+15. Untoggle the share; refresh B1; the contact disappears from the shared segment within one refresh cycle.
+16. As leader, set "Ad card visibility" to Off for B1. Switch to B1; confirm no ad-bordered cards appear in B1's feed.
+17. Block / report on a sub-profile is never gated: confirm the option is present on every long-press menu in B1, regardless of any feature toggle.
+18. Switch from B1 back to the leader profile via the "Switch profile" entry; confirm the leader's PIN is required and the active session token re-scopes to the leader profile.
 
 Automated test floor:
-- Unit tests for the contact-matching algorithm (mutual-only + one-hop registered-only invariants).
-- Snapshot/visual tests for each of the 7 border kind + pattern combos.
+- Unit tests for the contact-matching algorithm (mutual-only + one-hop registered-only invariants, profile-pair-keyed).
+- Unit tests for the troop-shared-contacts visibility rule (leader toggle on → sibling profiles see; off → siblings do not see; toggling does not leak unshared contacts; one-hop grants do not transfer across siblings).
+- Unit tests for the per-sub-profile feature-gate matrix (block / report always on regardless of toggles; defaults match the spec table).
+- Snapshot / visual tests for each of the 7 border kind + pattern combos.
 - E2E: Playwright (web), Detox or Maestro (mobile).
