@@ -169,7 +169,27 @@ Each requires its own design pass.
 10. Native cast-stream support (replacing v1 mirror-the-screen)
 11. Native iOS/Android rebuild if React Native proves limiting
 12. **Gaussian Splatting — Night Sight v2.** Accumulate a few seconds of LiDAR + RGB into an incremental on-device 3D Gaussian Splat (SplaTAM / MonoGS-style) and render artificially-coloured novel views, giving a wider perceived field of view than v1's raw ~5m point-cloud. Bleeding-edge on mobile; needs research-grade pipelines to mature.
-13. **Gaussian Splatting — Splat Cards.** A new card type. The author records a 30–60s walk-around (frames + depth + IMU); a cloud GPU service trains a 3DGS scene; recipients can orbit / pan the result in-feed. Cost per scene: ~$0.05–0.50 GPU + ~10–100 MB storage + bandwidth. Requires a new infra surface (training queue, GPU workers, splat CDN, in-app GS viewer). iOS Pro only at first; Android with ToF / ARCore Depth in a later wave.
+13. **Gaussian Splatting — Splat Cards.** A new card type. The author records a 30–60s walk-around (frames + depth + IMU); a cloud GPU service trains a 3DGS scene; recipients can orbit / pan the result in-feed. Cost per scene: ~$0.05–0.50 GPU + ~10–100 MB storage + bandwidth. Requires a new infra surface (training queue, GPU workers, splat CDN, in-app GS viewer). iOS Pro only at first; Android with ToF / ARCore Depth in a later wave. (Splat Cards are per-post, owned by the author, and live in the feed. The persistent, place-owned counterpart is item 14 below.)
+
+14. **Camp Atlas — group-shared, platform-owned site captures.** Builds on items 12 and 13. A user with a capable device (iOS Pro LiDAR; later Android ToF / ARCore Depth) captures a Gaussian-splat scene of a specific campsite, trail segment, water access, summit, etc. via an in-app "Map this place" mode — a ~30s–5min walk-around depending on site size. The cloud GPU service trains a 3DGS scene tied to a geo-bounded polygon. The result is automatically available to the capturer's mutual-contact group (and one-hop registered friends where the grant is set), so no one else in their group needs to re-capture the same place.
+
+    **Ownership and licence.** Captures are licensed to Camp King in perpetuity at capture time via a plain-language consent screen shown *before* capture begins (not buried in ToS). Camp King retains full rights to use captures internally and to redistribute them to a broader paying audience outside the original capturer's group — e.g., as a campsite-discovery product or a paid tier of the app itself (mechanism TBD; ties into the monetization work in item 7 and the marketplace work in item 6).
+
+    **Distribution surfaces.**
+    - Original capturer's mutual-contact group: free, ambient — sites appear pinned on a map view, splatted in-feed, or used as scenery during slideshow.
+    - Broader Camp King audience: paid tier or campsite-discovery product (TBD).
+    - **Out of scope for the v2 capture grant:** anonymous license-out to third parties (USFS / BLM, private campground operators, mapping companies, OSM-style open data). That requires either a v3 expanded consent or a per-deal opt-in.
+
+    **Open questions to resolve before v2 build.**
+    - Capture rights on private vs. public land. Default rule: only allow Camp Atlas captures on public lands (USFS, BLM, state/national parks, designated dispersed sites). Private campgrounds get blocked or routed to a per-site operator-consent flow.
+    - Bystander faces, license plates, and other human PII visible in captures. Default rule: server-side anonymisation pass before any capture leaves the original group's visibility scope.
+    - Duplicate or overlapping captures of the same site. Default rule: keep the highest-quality canonical capture per geographic cell; older captures retained for diff / changelog ("this site after the 2027 burn") but de-prioritised in serving.
+    - Storage and GPU economics. Average capture size + ongoing storage cost + retraining cadence are sized as part of the v2 build budget, not committed here.
+    - Take-down rights. The capturer can request their attribution be removed; Camp King retains the capture itself under the perpetual licence. If the underlying site is on private land and the operator objects, the capture is removed entirely.
+
+    **Why this matters strategically.** The by-product of free use of the app is a proprietary, growing geo-spatial dataset of camping locations that is hard for any competitor to bootstrap. The same capability lowers friction for new users joining an existing group — they instantly see splatted scenes of their friends' favourite spots without ever having been there.
+
+    **Privacy invariant impact.** Camp Atlas introduces a new RLS surface (`site_captures`, `site_captures_distribution`) separate from the `cards` table. Default visibility is the capturer's mutual-contact graph; broader-audience surfaces are gated by an explicit `distribution_tier` row, not by inheriting card-level RLS rules.
 
 ## Verification (cross-platform end-to-end)
 
