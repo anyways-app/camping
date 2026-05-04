@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opml version="2.0">
+  <head>
+    <title>Camp King — Feature Roadmap</title>
+    <dateCreated>Mon, 04 May 2026 00:00:00 GMT</dateCreated>
+    <ownerName>Camp King</ownerName>
+    <expansionState>1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19</expansionState>
+    <vertScrollState>1</vertScrollState>
+  </head>
+  <body>
+
+    <outline text="Identity &amp; Accounts (12 features)">
+      <outline text="FEAT-001: Troops as account container" id="FEAT-001" release="v1" status="Spec'd" definitionStatus="Drafted" reference="docs/features/FEAT-001-troops-as-account-container.md" _note="A Camp King account is a 'troop' holding billing, security, and master controls, with multiple profiles in a Netflix-style household."/>
+      <outline text="FEAT-002: Single troop leader" id="FEAT-002" release="v1" status="Spec'd" definitionStatus="Drafted" reference="docs/features/FEAT-002-single-troop-leader.md" _note="Each troop has exactly one leader profile with sole authority over master controls; immutable in v1."/>
+      <outline text="FEAT-003: Sub-profiles under a troop" id="FEAT-003" release="v1" status="Spec'd" definitionStatus="Drafted" reference="docs/features/FEAT-003-sub-profiles-under-a-troop.md" _note="A troop can hold up to 6 sub-profiles besides the leader (7 total max), each with its own social graph."/>
+      <outline text="FEAT-004: Profile picker on launch" id="FEAT-004" release="v1" status="Spec'd" definitionStatus="Drafted" reference="docs/features/FEAT-004-profile-picker-on-launch.md" _note="Netflix-style avatar grid after auth lets the user enter a profile, with PIN gates for the leader and any protected sub-profiles."/>
+      <outline text="FEAT-005: Leader profile PIN" id="FEAT-005" release="v1" status="Spec'd" definitionStatus="Drafted" reference="docs/features/FEAT-005-leader-profile-pin.md" _note="The leader's profile always requires a PIN, set at troop creation and resettable via OAuth/OTP."/>
+      <outline text="FEAT-006: Optional protected sub-profile PIN" id="FEAT-006" release="v1" status="Spec'd" definitionStatus="Drafted" reference="docs/features/FEAT-006-protected-sub-profile-pin.md" _note="The leader can mark any sub-profile 'protected,' adding a PIN gate identical in mechanics to the leader's."/>
+      <outline text="FEAT-007: Per-sub-profile feature gate matrix" id="FEAT-007" release="v1" status="Spec'd" definitionStatus="Drafted" reference="docs/features/FEAT-007-per-sub-profile-feature-gate-matrix.md" _note="A 15-row leader-controlled toggle matrix gating per-sub-profile capabilities; block/report always on."/>
+      <outline text="FEAT-008: ToS attestation — 13+ for every profile" id="FEAT-008" release="v1" status="Spec'd" definitionStatus="Drafted" reference="docs/features/FEAT-008-tos-attestation-13-plus-all-profiles.md" _note="The leader attests at troop creation that every sub-profile user is 13+, avoiding COPPA / GDPR-K scope."/>
+      <outline text="FEAT-009: Troop leader feature gate management UI" id="FEAT-009" release="v1" status="Spec'd" definitionStatus="Drafted" reference="docs/features/FEAT-009-troop-leader-feature-gate-management-ui.md" _note="The leader-only screen for creating, deleting, configuring, and PIN-protecting every sub-profile."/>
+      <outline text="FEAT-010: Verified-kids tier" id="FEAT-010" release="v2" status="Deferred" definitionStatus="Drafted" reference="docs/features/FEAT-010-verified-kids-tier.md" _note="A v2+ tier opening the platform to under-13 users with verified parental consent and data minimisation."/>
+      <outline text="FEAT-011: Co-leadership and ownership transfer" id="FEAT-011" release="v2" status="Deferred" definitionStatus="Drafted" reference="docs/features/FEAT-011-co-leadership-and-ownership-transfer.md" _note="v2 introduction of multi-leader troops and one-way troop ownership transfer to another adult identity."/>
+      <outline text="FEAT-012: Larger troops / tiered offering" id="FEAT-012" release="v2" status="Deferred" definitionStatus="Drafted" reference="docs/features/FEAT-012-larger-troops-tiered-offering.md" _note="A v2 tier exceeding the 6-sub-profile cap for scout troops, extended families, and classrooms."/>
+    </outline>
+
+    <outline text="Social Graph &amp; Privacy (6 features)">
+      <outline text="FEAT-013: Per-profile social graph" id="FEAT-013" release="v1" status="Spec'd" definitionStatus="Drafted" reference="docs/features/FEAT-013-per-profile-social-graph.md" _note="Each profile owns its own contact list, mutual-discovery state, and feed; profiles in the same troop don't share a graph by default."/>
+      <outline text="FEAT-014: Mutual-discovery contact match" id="FEAT-014" release="v1" status="Spec'd" definitionStatus="Pending" reference="" _note="Two profiles see each other in-app only if both uploaded the other's contact info and both are registered."/>
+      <outline text="FEAT-015: One-hop visibility grants" id="FEAT-015" release="v1" status="Spec'd" definitionStatus="Pending" reference="" _note="A profile can per-friend toggle 'let X see who I'm connected to,' exposing only registered profiles in their connection list."/>
+      <outline text="FEAT-016: Contact CSV import" id="FEAT-016" release="v1" status="Spec'd" definitionStatus="Pending" reference="" _note="A profile uploads its own address book / CSV; rows are private to the uploader except via leader-share toggles."/>
+      <outline text="FEAT-017: Troop-wide contact sharing" id="FEAT-017" release="v1" status="Spec'd" definitionStatus="Drafted" reference="docs/features/FEAT-017-troop-wide-contact-sharing.md" _note="The leader flicks 'Share with troop' on contacts to expose them to every profile in the troop in a distinct segment."/>
+      <outline text="FEAT-018: Privacy invariant — uploader-only + 2 leader exceptions" id="FEAT-018" release="v1" status="Spec'd" definitionStatus="Drafted" reference="docs/features/FEAT-018-privacy-invariant-uploader-only-plus-leader-exceptions.md" _note="Raw contacts are uploader-only with two leader-only opt-in exceptions: share-with-troop and share-with-trip."/>
+    </outline>
+
+    <outline text="Trips (16 features)">
+      <outline text="FEAT-019: Trips section in app navigation" id="FEAT-019" release="v1" status="Spec'd" definitionStatus="Drafted" reference="docs/features/FEAT-019-trips-section-in-app-navigation.md" _note="A separate top-level section for multi-troop camping events, with its own trips list and per-trip detail screens."/>
+      <outline text="FEAT-020: Trip creation by troop leader" id="FEAT-020" release="v1" status="Spec'd" definitionStatus="Drafted" reference="docs/features/FEAT-020-trip-creation-by-troop-leader.md" _note="A leader creates a trip with a required name plus optional description, location, dates, and cover image."/>
+      <outline text="FEAT-021: Trip metadata fields (v1)" id="FEAT-021" release="v1" status="Spec'd" definitionStatus="Drafted" reference="docs/features/FEAT-021-trip-metadata-fields-v1.md" _note="The customisable per-trip fields: name, description, location text, dates, cover image, and lifecycle status."/>
+      <outline text="FEAT-022: Trip lifecycle (draft / active / ended)" id="FEAT-022" release="v1" status="Spec'd" definitionStatus="Drafted" reference="docs/features/FEAT-022-trip-lifecycle.md" _note="Trips move through draft to active (first accept) to ended (creator/co-leader marks); no resurrection in v1."/>
+      <outline text="FEAT-023: Invite other troop leaders to a trip" id="FEAT-023" release="v1" status="Spec'd" definitionStatus="Drafted" reference="docs/features/FEAT-023-invite-other-troop-leaders-to-a-trip.md" _note="The trip creator or co-leader invites other troop leaders by phone or username; leader-to-leader only."/>
+      <outline text="FEAT-024: Accept trip invite" id="FEAT-024" release="v1" status="Spec'd" definitionStatus="Drafted" reference="docs/features/FEAT-024-accept-trip-invite.md" _note="The invited troop's leader accepts; their entire troop joins (subject to per-sub-profile gates)."/>
+      <outline text="FEAT-025: Trip creator role" id="FEAT-025" release="v1" status="Spec'd" definitionStatus="Drafted" reference="docs/features/FEAT-025-trip-creator-role.md" _note="The single non-transferable troop leader who created the trip, with full creator authority."/>
+      <outline text="FEAT-026: Trip co-leader promotion" id="FEAT-026" release="v1" status="Spec'd" definitionStatus="Drafted" reference="docs/features/FEAT-026-trip-co-leader-promotion.md" _note="The creator can promote any joined troop's leader to trip co-leader for shared trip-management privileges."/>
+      <outline text="FEAT-027: Trip-shared contact list" id="FEAT-027" release="v1" status="Spec'd" definitionStatus="Drafted" reference="docs/features/FEAT-027-trip-shared-contact-list.md" _note="Each trip has its own shared contact list visible to all trip members across joined troops."/>
+      <outline text="FEAT-028: Share with this trip toggle" id="FEAT-028" release="v1" status="Spec'd" definitionStatus="Drafted" reference="docs/features/FEAT-028-share-with-this-trip-toggle.md" _note="Any troop leader on the trip flicks 'Share with this trip' on contacts in their master list."/>
+      <outline text="FEAT-029: Sub-profile per-trip visibility override" id="FEAT-029" release="v1" status="Spec'd" definitionStatus="Drafted" reference="docs/features/FEAT-029-sub-profile-per-trip-visibility-override.md" _note="The leader can opt specific sub-profiles in or out of specific trips via a per-trip toggle."/>
+      <outline text="FEAT-030: Trip participation feature gate" id="FEAT-030" release="v1" status="Spec'd" definitionStatus="Drafted" reference="docs/features/FEAT-030-trip-participation-feature-gate.md" _note="A per-sub-profile gate (default On) controlling whether the sub-profile can join trips at all."/>
+      <outline text="FEAT-031: Forwarding-gate strictness on trips" id="FEAT-031" release="v1" status="Spec'd" definitionStatus="Drafted" reference="docs/features/FEAT-031-forwarding-gate-strictness-on-trips.md" _note="A sub-profile's 'Forward outside the troop' gate is not loosened by trip membership."/>
+      <outline text="FEAT-032: Trip privacy boundaries" id="FEAT-032" release="v1" status="Spec'd" definitionStatus="Drafted" reference="docs/features/FEAT-032-trip-privacy-boundaries.md" _note="Joining a trip never merges troops, shares billing, or exposes another troop's master list / roster / gates."/>
+      <outline text="FEAT-033: Trip features beyond v1 metadata" id="FEAT-033" release="v2" status="Deferred" definitionStatus="Drafted" reference="docs/features/FEAT-033-trip-features-beyond-v1-metadata.md" _note="v2+ catch-all for trip-filtered feed, geo-polygons, itineraries, RSVPs, packing lists, public trips, etc."/>
+      <outline text="FEAT-034: Trip creator transfer / co-creator" id="FEAT-034" release="v2" status="Deferred" definitionStatus="Drafted" reference="docs/features/FEAT-034-trip-creator-transfer-co-creator.md" _note="v2 introduction of trip creator transfer and co-creator status for trip survivability."/>
+    </outline>
+
+    <outline text="Card (8 features)">
+      <outline text="FEAT-035: Card data model" id="FEAT-035" release="v1" status="Spec'd" definitionStatus="Pending" reference="" _note="The atomic content unit (image + caption + sensors + counts + tags + border-derived) keyed to profile_id."/>
+      <outline text="FEAT-036: Image origin enum" id="FEAT-036" release="v1" status="Spec'd" definitionStatus="Pending" reference="" _note="image_origin field tracking whether a card image came from camera, gallery, or LiDAR AI."/>
+      <outline text="FEAT-037: Caption mode (below or overlay)" id="FEAT-037" release="v1" status="Spec'd" definitionStatus="Pending" reference="" _note="caption_mode controlling whether caption text renders under the image or as movable overlay on it."/>
+      <outline text="FEAT-038: Voice clip attached to card" id="FEAT-038" release="v1" status="Spec'd" definitionStatus="Pending" reference="" _note="Optional 15-second microphone capture stored per-card via voice_clip_url."/>
+      <outline text="FEAT-039: Forwarded card chain" id="FEAT-039" release="v1" status="Spec'd" definitionStatus="Pending" reference="" _note="forwarded_from_profile_id captures the original or most-recent author when a card is forwarded."/>
+      <outline text="FEAT-040: Engagement counters" id="FEAT-040" release="v1" status="Spec'd" definitionStatus="Pending" reference="" _note="Denormalised per-card counts for bookmark, firewood, match, lol, and forward."/>
+      <outline text="FEAT-041: Border kind derived at render" id="FEAT-041" release="v1" status="Spec'd" definitionStatus="Pending" reference="" _note="The 7 border kinds are computed from social graph + image_origin + author flags at render time, not stored."/>
+      <outline text="FEAT-042: Splat Cards (3DGS card type)" id="FEAT-042" release="v2" status="Deferred" definitionStatus="Pending" reference="" _note="v2+ deferred per-post 3D Gaussian-splat scene type recipients can orbit and pan in-feed."/>
+    </outline>
+
+    <outline text="Card Creation (10 features)">
+      <outline text="FEAT-043: Card creation flow (8 steps)" id="FEAT-043" release="v1" status="Spec'd" definitionStatus="Pending" reference="" _note="The end-to-end create flow: tap + to blank template to image source to flair to caption to preview to tag to post."/>
+      <outline text="FEAT-044: Camping flair frame set" id="FEAT-044" release="v1" status="Spec'd" definitionStatus="Pending" reference="" _note="~12 PNG/SVG decorative overlays composited onto card images client-side at upload."/>
+      <outline text="FEAT-045: Caption editor" id="FEAT-045" release="v1" status="Spec'd" definitionStatus="Pending" reference="" _note="1-2 sentence text entry below the image with a 'Convert to overlay' affordance."/>
+      <outline text="FEAT-046: Caption overlay editor" id="FEAT-046" release="v1" status="Spec'd" definitionStatus="Pending" reference="" _note="Convert-to-overlay places caption text on the image with movable / resizable / font / color controls."/>
+      <outline text="FEAT-047: Preview step" id="FEAT-047" release="v1" status="Spec'd" definitionStatus="Pending" reference="" _note="Right-arrow to preview the composited card; left-arrow returns to the editor."/>
+      <outline text="FEAT-048: Tag step (camping locked)" id="FEAT-048" release="v1" status="Spec'd" definitionStatus="Pending" reference="" _note="v1 auto-applies a single locked 'camping' tag to every card."/>
+      <outline text="FEAT-049: Additional system tags" id="FEAT-049" release="v2" status="Deferred" definitionStatus="Pending" reference="" _note="v2+ adds tags beyond camping: informative, ask, help, announcement, etc."/>
+      <outline text="FEAT-050: Client-side flair compositing at upload" id="FEAT-050" release="v1" status="Spec'd" definitionStatus="Pending" reference="" _note="Image + flair frame composited on device into one final PNG/JPEG; no per-view rendering."/>
+      <outline text="FEAT-051: LiDAR fantastical AI render" id="FEAT-051" release="v1" status="Spec'd" definitionStatus="Pending" reference="" _note="iOS-Pro-only AI image-render mode using LiDAR depth + nano banana to produce fantastical scenes."/>
+      <outline text="FEAT-052: General-purpose AI image generation" id="FEAT-052" release="v2" status="Deferred" definitionStatus="Pending" reference="" _note="v2+ deferred free-text-prompt AI card generation."/>
+    </outline>
+
+    <outline text="Feed (5 features)">
+      <outline text="FEAT-053: Horizontal full-screen card swipe" id="FEAT-053" release="v1" status="Built (M1 web)" definitionStatus="Pending" reference="" _note="Each card occupies most of the screen; swipe / arrow-key advances feed."/>
+      <outline text="FEAT-054: Zoom-out grid view" id="FEAT-054" release="v1" status="Built (M1 web)" definitionStatus="Pending" reference="" _note="A button collapses the feed to ~12 cards on screen; tap returns to full-screen on a card."/>
+      <outline text="FEAT-055: Idle-triggered slideshow" id="FEAT-055" release="v1" status="Built (M1 web)" definitionStatus="Pending" reference="" _note="60 seconds of no interaction triggers slideshow mode; any user input exits."/>
+      <outline text="FEAT-056: Slideshow advance interval" id="FEAT-056" release="v1" status="Built (M1 web)" definitionStatus="Pending" reference="" _note="Slideshow advances one card every 25 seconds."/>
+      <outline text="FEAT-057: Bottom horizontal + create button" id="FEAT-057" release="v1" status="Built (M1 web)" definitionStatus="Pending" reference="" _note="Persistent bottom strip with the + button to enter card creation flow (currently stubs to a toast)."/>
+    </outline>
+
+    <outline text="Card Interactions (6 features)">
+      <outline text="FEAT-058: Long-press menu" id="FEAT-058" release="v1" status="Built (M1 web)" definitionStatus="Pending" reference="" _note="Long-press or right-click opens a 4-action menu of firewood / match / bookmark / block-report."/>
+      <outline text="FEAT-059: Swipe-down LOL" id="FEAT-059" release="v1" status="Built (M1 web)" definitionStatus="Pending" reference="" _note="Swipe down on a card fires the LOL reaction."/>
+      <outline text="FEAT-060: Swipe-up Forward" id="FEAT-060" release="v1" status="Built (M1 web)" definitionStatus="Pending" reference="" _note="Swipe up on a card opens the forward picker."/>
+      <outline text="FEAT-061: Forward picker modal" id="FEAT-061" release="v1" status="Spec'd" definitionStatus="Drafted" reference="docs/features/FEAT-061-forward-picker-modal.md" _note="Modal contact picker for choosing a forward recipient, segmented by in-troop / direct contacts / trip contacts."/>
+      <outline text="FEAT-062: Swipe left / right next-prev card" id="FEAT-062" release="v1" status="Built (M1 web)" definitionStatus="Pending" reference="" _note="Touch swipe and arrow keys advance the feed laterally."/>
+      <outline text="FEAT-063: Direct messages between profiles" id="FEAT-063" release="v2" status="Deferred" definitionStatus="Pending" reference="" _note="v2+ deferred person-to-person threaded messaging."/>
+    </outline>
+
+    <outline text="Borders (1 feature)">
+      <outline text="FEAT-064: 7 border kinds (color + pattern)" id="FEAT-064" release="v1" status="Built (M1 web)" definitionStatus="Pending" reference="" _note="Cards render with one of 7 borders combining color + stroke pattern; pattern is the accessibility primary."/>
+    </outline>
+
+    <outline text="Moderation (2 features)">
+      <outline text="FEAT-065: Layer 1 — automated pre-moderation on upload" id="FEAT-065" release="v1" status="Spec'd" definitionStatus="Pending" reference="" _note="Image and caption classifiers flag adult / violence / hate / PII before content reaches feeds."/>
+      <outline text="FEAT-066: Layer 2 — manual report queue" id="FEAT-066" release="v1" status="Spec'd" definitionStatus="Pending" reference="" _note="In-app reports route to the same review queue; block / report is always-on per the gate matrix."/>
+    </outline>
+
+    <outline text="Sensors (7 features)">
+      <outline text="FEAT-067: Geolocation capture" id="FEAT-067" release="v1" status="Spec'd" definitionStatus="Pending" reference="" _note="Device GPS / fused location populates geo_point on cards."/>
+      <outline text="FEAT-068: Barometric elevation" id="FEAT-068" release="v1" status="Spec'd" definitionStatus="Pending" reference="" _note="Barometer (or GPS-derived fallback) populates elevation_m on cards."/>
+      <outline text="FEAT-069: Compass heading" id="FEAT-069" release="v1" status="Spec'd" definitionStatus="Pending" reference="" _note="Magnetometer + gyroscope snapshot at capture populates compass_heading_deg."/>
+      <outline text="FEAT-070: Pedometer trail mode" id="FEAT-070" release="v1" status="Spec'd" definitionStatus="Pending" reference="" _note="Tap-to-start at trailhead, tap-to-stop, distance attached to next card via trail_length_m."/>
+      <outline text="FEAT-071: Ambient temperature" id="FEAT-071" release="v1" status="Spec'd" definitionStatus="Pending" reference="" _note="Native sensor when present, weather-API fallback for the geo_point; ambient_temp_source records which."/>
+      <outline text="FEAT-072: Voice clip recording" id="FEAT-072" release="v1" status="Spec'd" definitionStatus="Pending" reference="" _note="Optional 15-second microphone capture attached to a card via voice_clip_url."/>
+      <outline text="FEAT-073: Web sensor read-only display" id="FEAT-073" release="v1" status="Spec'd" definitionStatus="Pending" reference="" _note="Web client displays sensor fields when present but populates only geo_point opportunistically."/>
+    </outline>
+
+    <outline text="Auth (3 features)">
+      <outline text="FEAT-074: Phone-number SMS OTP" id="FEAT-074" release="v1" status="Spec'd" definitionStatus="Pending" reference="" _note="Primary auth at the troop level via Supabase Auth (Twilio / MessageBird)."/>
+      <outline text="FEAT-075: Google OAuth" id="FEAT-075" release="v1" status="Spec'd" definitionStatus="Pending" reference="" _note="Alternate troop-level auth via expo-auth-session (mobile) / Supabase redirect (web)."/>
+      <outline text="FEAT-076: Apple OAuth (Sign in with Apple)" id="FEAT-076" release="v1" status="Spec'd" definitionStatus="Pending" reference="" _note="Mandatory on iOS if Google offered (App Store rule); also available on web / Android for parity."/>
+    </outline>
+
+    <outline text="Backend (3 features)">
+      <outline text="FEAT-077: Supabase backend" id="FEAT-077" release="v1" status="Spec'd" definitionStatus="Pending" reference="" _note="Managed Postgres, Auth, Storage, Realtime, and Edge Functions for the entire platform."/>
+      <outline text="FEAT-078: Row-Level Security policies" id="FEAT-078" release="v1" status="Spec'd" definitionStatus="Pending" reference="" _note="Postgres RLS on every social-graph table encodes the privacy invariants with profile_id keys."/>
+      <outline text="FEAT-079: Storage buckets for cards" id="FEAT-079" release="v1" status="Spec'd" definitionStatus="Pending" reference="" _note="Supabase Storage cards/ for posted images; optional cards-originals/ for re-edits."/>
+    </outline>
+
+    <outline text="Casting (2 features)">
+      <outline text="FEAT-080: OS-level screen mirroring (all platforms)" id="FEAT-080" release="v1" status="Spec'd" definitionStatus="Pending" reference="" _note="v1 casting is OS mirror only: Cast tab on web, AirPlay on iOS, Google Cast on Android."/>
+      <outline text="FEAT-081: Native cast streams" id="FEAT-081" release="v2" status="Deferred" definitionStatus="Pending" reference="" _note="v2+ deferred app-side cast support replacing screen mirroring."/>
+    </outline>
+
+    <outline text="Web Platform (6 features)">
+      <outline text="FEAT-082: Next.js 15 + Tailwind v4 + RSC" id="FEAT-082" release="v1" status="Built (M1 web)" definitionStatus="Pending" reference="" _note="The web platform stack: Next.js App Router, React 19 server components, Tailwind v4 styling."/>
+      <outline text="FEAT-083: PWA install (manifest + service worker)" id="FEAT-083" release="v1" status="Spec'd" definitionStatus="Pending" reference="" _note="Installable as a PWA on desktop and mobile browsers, with offline shell + cached cards."/>
+      <outline text="FEAT-084: Web image capture + upload" id="FEAT-084" release="v1" status="Spec'd" definitionStatus="Pending" reference="" _note="File input with accept=image/* + capture=environment for direct rear-camera capture on mobile browsers."/>
+      <outline text="FEAT-085: Web caption-overlay HTML5 Canvas editor" id="FEAT-085" release="v1" status="Spec'd" definitionStatus="Pending" reference="" _note="Final composite is a single PNG/JPEG uploaded to Supabase Storage from the browser."/>
+      <outline text="FEAT-086: Wake-lock during slideshow" id="FEAT-086" release="v1" status="Spec'd" definitionStatus="Pending" reference="" _note="Screen Wake Lock API keeps the screen on during slideshow / casting."/>
+      <outline text="FEAT-087: Browser support floor" id="FEAT-087" release="v1" status="Spec'd" definitionStatus="Pending" reference="" _note="Chrome 110+, Edge 110+, Safari 16+, Firefox 115+; older browsers see a 'please update' page."/>
+    </outline>
+
+    <outline text="iOS Platform (7 features)">
+      <outline text="FEAT-088: React Native + Expo (iOS)" id="FEAT-088" release="v1" status="Spec'd" definitionStatus="Pending" reference="" _note="iOS app stack: Expo SDK 51+ managed workflow, Reanimated 3, react-native-gesture-handler."/>
+      <outline text="FEAT-089: LiDAR Night Sight (iOS Pro only)" id="FEAT-089" release="v1" status="Spec'd" definitionStatus="Pending" reference="" _note="Real-time LiDAR depth-field render for navigation in zero-light campsites; not a content tool in v1."/>
+      <outline text="FEAT-090: Camp Atlas (group-shared site captures)" id="FEAT-090" release="v2" status="Deferred" definitionStatus="Drafted" reference="docs/features/FEAT-090-camp-atlas.md" _note="v2+ group-shared, platform-owned 3DGS site captures; capturer's group sees free, broader audience pays."/>
+      <outline text="FEAT-091: Gaussian Splatting Night Sight v2" id="FEAT-091" release="v2" status="Deferred" definitionStatus="Pending" reference="" _note="v2+ on-device 3DGS accumulation of LiDAR + RGB for a wider perceived FOV than v1's raw point cloud."/>
+      <outline text="FEAT-092: APNs push notifications" id="FEAT-092" release="v1" status="Spec'd" definitionStatus="Pending" reference="" _note="iOS push via expo-notifications and Expo Push Service for friend / forward / moderation / system events."/>
+      <outline text="FEAT-093: AirPlay screen mirroring" id="FEAT-093" release="v1" status="Spec'd" definitionStatus="Pending" reference="" _note="OS-initiated screen mirroring via Control Center; app keeps screen awake."/>
+      <outline text="FEAT-094: iOS distribution: TestFlight + App Store" id="FEAT-094" release="v1" status="Spec'd" definitionStatus="Pending" reference="" _note="Beta on TestFlight, production on the App Store; bundle ID app.campking.ios."/>
+    </outline>
+
+    <outline text="Android Platform (5 features)">
+      <outline text="FEAT-095: React Native + Expo (Android)" id="FEAT-095" release="v1" status="Spec'd" definitionStatus="Pending" reference="" _note="Android app stack: Expo SDK 51+, Reanimated 3, min SDK 26, target 34+."/>
+      <outline text="FEAT-096: FCM push notifications" id="FEAT-096" release="v1" status="Spec'd" definitionStatus="Pending" reference="" _note="Android push via expo-notifications using FCM channels."/>
+      <outline text="FEAT-097: Google Cast screen mirroring" id="FEAT-097" release="v1" status="Spec'd" definitionStatus="Pending" reference="" _note="OS-initiated screen mirroring via system Cast UI; expo-keep-awake during slideshow."/>
+      <outline text="FEAT-098: Android ARCore Depth (LiDAR equivalent)" id="FEAT-098" release="v2" status="Deferred" definitionStatus="Pending" reference="" _note="v2+ Android-side LiDAR-fantastical equivalent path via ARCore Depth on supported devices."/>
+      <outline text="FEAT-099: Android distribution: Play Console tracks" id="FEAT-099" release="v1" status="Spec'd" definitionStatus="Pending" reference="" _note="Internal testing to Closed testing to Production; application ID app.campking.android."/>
+    </outline>
+
+    <outline text="Operations (3 features)">
+      <outline text="FEAT-100: Web hosting (Vercel or Cloudflare)" id="FEAT-100" release="v1" status="Spec'd" definitionStatus="Pending" reference="" _note="Single production environment plus a staging environment fed by main and a staging branch."/>
+      <outline text="FEAT-101: Cross-platform e2e verification suite" id="FEAT-101" release="v1" status="Spec'd" definitionStatus="Pending" reference="" _note="10-step cross-platform check + 8 troop scenarios + 8 trip scenarios run on each client before declaring v1 done."/>
+      <outline text="FEAT-102: Automated test floor" id="FEAT-102" release="v1" status="Spec'd" definitionStatus="Pending" reference="" _note="Unit tests for matching/share/gate algorithms, snapshot tests for borders, Playwright (web), Detox/Maestro (mobile)."/>
+    </outline>
+
+    <outline text="Strategic / v2+ deferred (8 features)">
+      <outline text="FEAT-103: Real-time chat / DM" id="FEAT-103" release="v2" status="Deferred" definitionStatus="Pending" reference="" _note="v2+ deferred person-to-person threaded messaging."/>
+      <outline text="FEAT-104: Calendar / event management" id="FEAT-104" release="v2" status="Deferred" definitionStatus="Pending" reference="" _note="v2+ deferred shared schedules and event RSVPs."/>
+      <outline text="FEAT-105: Ride-share / transportation coordination" id="FEAT-105" release="v2" status="Deferred" definitionStatus="Pending" reference="" _note="v2+ deferred carpool / ride coordination."/>
+      <outline text="FEAT-106: Convoy management" id="FEAT-106" release="v2" status="Deferred" definitionStatus="Pending" reference="" _note="v2+ deferred multi-vehicle convoy coordination."/>
+      <outline text="FEAT-107: Campsite availability / dispersed camping" id="FEAT-107" release="v2" status="Deferred" definitionStatus="Pending" reference="" _note="v2+ deferred real-time campsite availability + dispersed-camping data product."/>
+      <outline text="FEAT-108: Marketplace / paid connections / merchant onboarding" id="FEAT-108" release="v2" status="Deferred" definitionStatus="Pending" reference="" _note="v2+ deferred paid-connections marketplace and merchant onboarding flow."/>
+      <outline text="FEAT-109: Monetization billing + ultra-monetized reach" id="FEAT-109" release="v2" status="Deferred" definitionStatus="Pending" reference="" _note="v2+ deferred buying tools, boosted reach, and billing infrastructure beyond v1."/>
+      <outline text="FEAT-110: Native iOS / Android rebuild" id="FEAT-110" release="v2" status="Deferred" definitionStatus="Pending" reference="" _note="v2+ contingency: rebuild natively if React Native proves limiting at scale."/>
+    </outline>
+
+    <outline text="Reserved — terminology pending (5 features from latest writeup)">
+      <outline text="FEAT-RES-1: Account types (Camper / Business / Service)" id="FEAT-RES-1" release="v1+" status="Pending number" definitionStatus="Awaiting terminology" reference="docs/glossary.md" _note="Three account-type classification at the troop / account level: Camper (default v1), Business (v2), Service (v2). From profiles writeup."/>
+      <outline text="FEAT-RES-2: Linked profiles (independent account to troop sub-profile)" id="FEAT-RES-2" release="v1+" status="Pending number" definitionStatus="Awaiting terminology" reference="docs/glossary.md" _note="A sub-profile can be backed by an independent registered account; linked profiles get additional features. From profiles writeup."/>
+      <outline text="FEAT-RES-3: Group-join flow (registered user joining someone else's troop)" id="FEAT-RES-3" release="v1+" status="Pending number" definitionStatus="Awaiting terminology" reference="docs/glossary.md" _note="SMS / email invite, deep-link, confirm step; joining disables the joiner's own profile-creation while in the other troop. From profiles writeup."/>
+      <outline text="FEAT-RES-4: Troop-level settings inheritance (HOME BASE etc.)" id="FEAT-RES-4" release="v1+" status="Pending number" definitionStatus="Awaiting terminology" reference="docs/glossary.md" _note="Group-level state (e.g. HOME BASE) cascades from the troop down to every profile in the troop. From profiles writeup."/>
+      <outline text="FEAT-RES-5: Elevated feature gates (not just restrictive)" id="FEAT-RES-5" release="v1" status="Pending number" definitionStatus="Awaiting terminology" reference="docs/glossary.md" _note="Edit to FEAT-007: gates can enhance a capability beyond default (e.g. continuous GPS for elders), not just restrict. From profiles writeup."/>
+    </outline>
+
+  </body>
+</opml>

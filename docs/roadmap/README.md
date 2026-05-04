@@ -5,7 +5,8 @@ Tracking artifact distinguishing what's in v1, what's deferred to v2+, and what'
 ## Files
 
 - **`feature-roadmap.csv`** — the trackable archive. One row per feature, eight columns. Opens cleanly in Excel, Google Sheets, Numbers, or any CSV viewer. Diffable in version control.
-- **`README.md`** (this file) — schema documentation, current counts, and how to keep the CSV in sync with the spec.
+- **`feature-roadmap.opml`** — same content as the CSV, structured as an OPML 2.0 outline with 19 area groups and 115 leaf entries (110 numbered + 5 reserved for the latest writeup, awaiting terminology lock). Opens in OmniOutliner, Workflowy, Dynalist, Logseq, and other outliners; each leaf carries `id` / `release` / `status` / `definitionStatus` / `reference` attributes plus a `_note` description. Use whichever format fits your tool.
+- **`README.md`** (this file) — schema documentation, current counts, and how to keep both formats in sync with the spec.
 
 ## CSV schema
 
