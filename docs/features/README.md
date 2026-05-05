@@ -55,7 +55,7 @@ Updated as features are drafted. Three states:
 - **Drafted** — first pass complete, awaiting product review.
 - **Reviewed** — locked. Changes need a follow-up review.
 
-Currently drafted (32 of 110):
+Currently drafted (44 of 121):
 
 | FEAT | Name | Status | Last reviewed |
 |---|---|---|---|
@@ -92,8 +92,19 @@ Currently drafted (32 of 110):
 | FEAT-034 | Trip creator transfer / co-creator (deferred) | Drafted | 2026-05-01 |
 | FEAT-061 | Forward picker modal | Drafted (seed) | 2026-05-01 |
 | FEAT-090 | Camp Atlas (deferred) | Drafted | 2026-05-01 |
+| FEAT-111 | Trip bootstrap & credential provisioning (Mesh-v1) | Drafted | 2026-05-04 |
+| FEAT-112 | Trip start / offline-active transition (Mesh-v1) | Drafted | 2026-05-04 |
+| FEAT-113 | Wire protocol & crypto envelope (Mesh-v1) | Drafted | 2026-05-04 |
+| FEAT-114 | Send a message (Mesh-v1) | Drafted | 2026-05-04 |
+| FEAT-115 | Receive, dedup, multi-hop relay, TTL (Mesh-v1) | Drafted | 2026-05-04 |
+| FEAT-116 | Acknowledgments (Mesh-v1) | Drafted | 2026-05-04 |
+| FEAT-117 | Store-and-forward persistence (Mesh-v1) | Drafted | 2026-05-04 |
+| FEAT-118 | Geolocation piggyback (Mesh-v1) | Drafted | 2026-05-04 |
+| FEAT-119 | Revocation and key rotation (Mesh-v1) | Drafted | 2026-05-04 |
+| FEAT-120 | Battery & platform optimization modes (Mesh-v1) | Drafted | 2026-05-04 |
+| FEAT-121 | Dictionary extension editor (Mesh-v1) | Drafted | 2026-05-04 |
 
-A full status table covering all 110 will be maintained here as drafting proceeds; the remaining ~78 are in the inherited / supporting feature set (sensors, auth, casting, platform plumbing, strategic v2+ items) and can be drafted in subsequent batches per the suggested order above.
+A full status table covering all 121 will be maintained here as drafting proceeds; the remaining ~77 are in the inherited / supporting feature set (sensors, auth, casting, platform plumbing, strategic v2+ items) and can be drafted in subsequent batches per the suggested order above.
 
 ## After drafting is complete
 
