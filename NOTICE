@@ -1,0 +1,25 @@
+Camp King — Inbound Attribution and DBA Disclosures
+====================================================
+
+This file lists external contributions, design briefs, and DBA
+attributions inbound to the Camp King codebase. Distinct from
+LICENSE — which governs the outbound terms of this code — NOTICE
+captures the *provenance* of inbound material that informs the
+product's design and claims.
+
+Offline BLE Mesh Capability — Engineering Brief
+-----------------------------------------------
+Source: vividConsulting.info
+DBA of: SKrishnan Media Enterprises Inc.
+Address: 2310 N Henderson Ave Ste B Unit 1591, Dallas, TX 75206
+Document: docs/briefs/offline-mesh-engineering-brief.md
+Receipt date: 2026-05-04
+Scope: Architectural brief for Camp King's offline BLE mesh
+capability. Patent-boundary documentation included; the application-
+layer claims (Trip lifecycle, dictionary UX, family-account
+integration with mesh, silent-delete-with-coordinated-rotation
+revocation, key-epoch eventual-consistency, "connected disconnected"
+UX) are surfaced for separate patent attorney engagement under this
+attribution. Transport-layer prior art (BLE mesh, AES-CCM, Ed25519,
+sealed-box envelopes, generic key rotation) is acknowledged and not
+claimed.

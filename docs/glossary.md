@@ -258,6 +258,34 @@ I will then run the rename pass and back-edit the docs in one commit per categor
 | Troop-specific verification | The 8-step troop-only check (00-core.md) | Working | Tied to Troop naming. | |
 | Trip-specific verification | The 8-step trip-only check (00-core.md) | Working | Tied to Trip naming. | |
 | Moderation queue | The review surface for flagged content (FEAT-065, FEAT-066) | Working | Standard. | |
+| Mesh-specific verification | The 6-step mesh-only check added in `00-core.md` and detailed in `40-offline-mesh.md` | Working | Tied to Mesh-v1 release-track naming. | |
+
+---
+
+## 16. Offline BLE Mesh (Mesh-v1 track)
+
+These terms are introduced by the Mesh-v1 featureset (FEAT-111..121, source brief: `docs/briefs/offline-mesh-engineering-brief.md`). All `Working` until the broader rename pass; `MemberID` flagged `Issue` because it conflicts with the existing `profile_id` data-model identifier.
+
+| Term | Refers to | Status | Notes / alternatives | Decision |
+|---|---|---|---|---|
+| TripKey | The 32-byte symmetric key generated server-side per Trip; AES-CCM encryption key for every mesh message in that Trip | Working | Could be `tripKey` / `trip_key` in code; user-facing copy may avoid the term entirely. | |
+| MemberID | The 8-byte Trip-scoped identifier per member device, distinct from the global `profile_id` | Issue | **Conflicts with existing `profile_id` data-model identity.** Resolve before lock: is MemberID a derived alias of profile_id within a Trip, or a separately-issued identifier? Likely "derived alias for the wire format only." | |
+| Dictionary (mesh sense) | The 1,024-entry base + 256-entry per-Trip extension messaging vocabulary used in offline mode | Issue | Overloaded with the data-structure sense of "dictionary" used in code generally. Could rename to "Vocabulary" or "Message lexicon." | |
+| Key-epoch | Monotonically incrementing integer in the cleartext message header that selects the active TripKey generation | Working | Industry-standard cryptographic vocabulary; safe to keep. | |
+| REVOKE_AND_ROTATE | The single-broadcast message type that simultaneously instructs an excluded device to delete credentials AND delivers a new TripKey to remaining members via per-recipient sealed-box envelopes | Working | Wire-protocol constant name. User-facing copy describes the effect ("Remove this member") without surfacing the constant. | |
+| MessageID | 6-byte random per-message identifier used for dedup; truncated to 3 bytes in the cleartext header, full 6 bytes in the encrypted blob | Working | Technical; rarely user-facing. | |
+| ACK | Acknowledgment message type carrying an original `MessageID`; emitted only for direct messages with sender-requested ACK | Working | Standard networking abbreviation. | |
+| TTL (hop-count sense) | Time-to-live as a hop counter (default 5), decremented on each relay; distinct from TTL-in-time used for store-and-forward eviction (24h) | Working | Same word, two senses; clarify per usage. | |
+| Sealed-box envelope | Per-recipient encrypted blob (X25519-derived ECDH + AES-GCM) carrying the new TripKey to one specific member during `REVOKE_AND_ROTATE` | Working | libsodium-style nomenclature; standard. | |
+| Foreground service | Android `Service.startForeground(...)` mechanism required for sustained BLE scan / advertise; shows a persistent notification | Working | Android platform terminology; unavoidable. | |
+| Minimal mode | Battery mode default: advertise 2s ON / 28s OFF; scan low-latency 10% duty (FEAT-120) | Working | User-facing "Minimal" label; could be "Battery saver" if friendlier. | |
+| Boost mode | Battery mode opt-in: advertise 2s ON / 8s OFF; continuous scan (FEAT-120) | Working | User-facing "Boost"; could be "Performance" / "Active" if friendlier. | |
+| Mixed mode | Platform-optimization mode default: service-UUID-encoded payloads, lowest-common-denominator, ~16-byte payloads (FEAT-120) | Working | Technical; user-facing copy may say "Auto." | |
+| iPhone-group mode | Platform-optimization mode when all peers iOS: switch to MultipeerConnectivity for richer transport (FEAT-120) | Working | "iPhone-group" matches brief. Could be "All-iPhone optimized." | |
+| Android-group mode | Platform-optimization mode when all peers Android with BLE 5 extended advertising: ~255-byte payloads (FEAT-120) | Working | "Android-group" matches brief. Could be "All-Android optimized." | |
+| Forward secrecy | The cryptographic property that a revoked device cannot decrypt traffic sent after the revocation, regardless of its cooperation | Working | Standard cryptographic vocabulary. | |
+| Eventual-consistency window | The time period during which different members may be operating under different key-epochs after a `REVOKE_AND_ROTATE` broadcast | Working | Borrowed from distributed-systems vocabulary; appropriate. | |
+| Connected-disconnected | The product positioning / UX framing that surfaces offline-mesh state to a consumer audience without exposing technical detail | Working | Brand-distinct UX term. **Patent-relevant** per `docs/legal/patent-claims.md` § C6. | |
 
 ---
 
@@ -271,6 +299,8 @@ The most-impactful renames, in priority order:
 4. **Camp Atlas** name (§1, §10). Never blessed; placeholder I introduced. Decide before legal / consent screen drafting.
 5. **LiDAR Night Sight** trademark risk (§1). Pick a non-Pixel-conflicting name before iOS dev work begins.
 6. **Restriction vs. Elevated gate** (§3). The writeup introduces gates that *enhance* (elder GPS), not just *restrict*. Today's terminology assumes restrictions only.
+7. **MemberID vs. profile_id** (§16). Mesh-v1 introduces an 8-byte Trip-scoped MemberID; existing data model uses global profile_id. Are these distinct identifiers (server issues both) or is MemberID a Trip-scoped derived alias of profile_id (only the alias goes on the wire)? Latter is simpler; resolve before FEAT-111 build.
+8. **Dictionary overloading** (§16). The mesh sense (messaging vocabulary) and the generic data-structure sense compete. Pick a different surface name for the mesh sense (e.g. "Vocabulary" or "Message lexicon") to keep code semantics clean.
 
 ## Out of scope of this review
 
