@@ -4,7 +4,7 @@
     <title>Camp King — Feature Roadmap</title>
     <dateCreated>Mon, 04 May 2026 00:00:00 GMT</dateCreated>
     <ownerName>Camp King</ownerName>
-    <expansionState>1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19</expansionState>
+    <expansionState>1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20</expansionState>
     <vertScrollState>1</vertScrollState>
   </head>
   <body>
@@ -171,6 +171,20 @@
       <outline text="FEAT-108: Marketplace / paid connections / merchant onboarding" id="FEAT-108" release="v2" status="Deferred" definitionStatus="Pending" reference="" _note="v2+ deferred paid-connections marketplace and merchant onboarding flow."/>
       <outline text="FEAT-109: Monetization billing + ultra-monetized reach" id="FEAT-109" release="v2" status="Deferred" definitionStatus="Pending" reference="" _note="v2+ deferred buying tools, boosted reach, and billing infrastructure beyond v1."/>
       <outline text="FEAT-110: Native iOS / Android rebuild" id="FEAT-110" release="v2" status="Deferred" definitionStatus="Pending" reference="" _note="v2+ contingency: rebuild natively if React Native proves limiting at scale."/>
+    </outline>
+
+    <outline text="Offline BLE Mesh (Mesh-v1, 11 features)">
+      <outline text="FEAT-111: Trip bootstrap &amp; credential provisioning" id="FEAT-111" release="Mesh-v1" status="Spec'd" definitionStatus="Drafted" reference="docs/features/FEAT-111-trip-bootstrap-credentials.md" _note="At Trip create / accept-invite, server issues per-device TripKey + 8-byte MemberID + Ed25519 keypair + roster + dictionary version pin via authenticated channel; persisted in Keychain / Keystore."/>
+      <outline text="FEAT-112: Trip start / offline-active transition" id="FEAT-112" release="Mesh-v1" status="Spec'd" definitionStatus="Drafted" reference="docs/features/FEAT-112-trip-start-offline-active-transition.md" _note="User-initiated 'Start Trip' transitions a mesh-enabled Trip to active+offline-active substate; BLE advertise/scan begin; foreground service starts; dictionary frozen."/>
+      <outline text="FEAT-113: Wire protocol &amp; crypto envelope" id="FEAT-113" release="Mesh-v1" status="Spec'd" definitionStatus="Drafted" reference="docs/features/FEAT-113-wire-protocol-and-crypto-envelope.md" _note="5B cleartext header (version+flags / key_epoch / truncated MessageID) + AES-CCM encrypted blob with sender/recipient/TTL/message_type/dictionary_index/params/optional geo; multi-UUID chaining for long messages."/>
+      <outline text="FEAT-114: Send a message" id="FEAT-114" release="Mesh-v1" status="Spec'd" definitionStatus="Drafted" reference="docs/features/FEAT-114-send-message.md" _note="User picks dictionary entry + optional params + recipient + ACK + geo; device composes wire-format payload, AES-CCM encrypts with current TripKey, queues for advertise, persists."/>
+      <outline text="FEAT-115: Receive, dedup, multi-hop relay, TTL" id="FEAT-115" release="Mesh-v1" status="Spec'd" definitionStatus="Drafted" reference="docs/features/FEAT-115-receive-dedup-relay.md" _note="On scan: parse cleartext header, decrypt with current/prev epoch TripKey, dedup against LRU cache, deliver if recipient=self/broadcast, relay if TTL>0 with TTL-1."/>
+      <outline text="FEAT-116: Acknowledgments" id="FEAT-116" release="Mesh-v1" status="Spec'd" definitionStatus="Drafted" reference="docs/features/FEAT-116-acknowledgments.md" _note="ACK is its own message_type carrying the original MessageID; broadcast suppression (broadcasts never trigger ACKs); fire-and-forget, no ACK-of-ACK."/>
+      <outline text="FEAT-117: Store-and-forward persistence" id="FEAT-117" release="Mesh-v1" status="Spec'd" definitionStatus="Drafted" reference="docs/features/FEAT-117-store-and-forward-persistence.md" _note="Encrypted SQLite (SQLCipher with secure-enclave key) holding outbound + inbound + relay queues; eviction at 24h TTL OR ACK-received OR LRU at 1000 entries; survives app kill / sleep / out-of-range."/>
+      <outline text="FEAT-118: Geolocation piggyback" id="FEAT-118" release="Mesh-v1" status="Spec'd" definitionStatus="Drafted" reference="docs/features/FEAT-118-geolocation-piggyback.md" _note="Per-message opt-in 6-byte (lat 3B + lon 3B, ~5m at equator) coordinate attached to mesh messages; gated by FEAT-007 'Geo capture on posts'; rendered on Trip map at receiver."/>
+      <outline text="FEAT-119: Revocation and key rotation" id="FEAT-119" release="Mesh-v1" status="Spec'd" definitionStatus="Drafted" reference="docs/features/FEAT-119-revocation-and-key-rotation.md" _note="REVOKE_AND_ROTATE: single broadcast that silently instructs excluded device to delete creds AND delivers new TripKey to all remaining members via per-recipient sealed-box envelopes; forward secrecy guaranteed regardless of excluded device cooperation; key-epoch tagged. Primary patent claim."/>
+      <outline text="FEAT-120: Battery &amp; platform optimization modes" id="FEAT-120" release="Mesh-v1" status="Spec'd" definitionStatus="Drafted" reference="docs/features/FEAT-120-battery-and-platform-optimization-modes.md" _note="Battery: Minimal (default; 2s on/28s off; 10% scan duty) vs Boost (2s on/8s off; continuous scan). Platform: Mixed (default; service-UUID 16B payload) vs iPhone-group (MultipeerConnectivity) vs Android-group (BLE 5 extended advertising 255B payload)."/>
+      <outline text="FEAT-121: Dictionary extension editor" id="FEAT-121" release="Mesh-v1" status="Spec'd" definitionStatus="Drafted" reference="docs/features/FEAT-121-dictionary-extension-editor.md" _note="In-app editor for up to 256 custom entries pre-Trip-start; sync to all Trip members via online channel; frozen (version-pinned) at Trip start for the offline lifetime."/>
     </outline>
 
     <outline text="Reserved — terminology pending (5 features from latest writeup)">

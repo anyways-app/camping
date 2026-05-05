@@ -27,12 +27,22 @@ Tracking artifact distinguishing what's in v1, what's deferred to v2+, and what'
 
 | Cut | Count |
 |---|---|
-| **Total features tracked** | 110 |
+| **Total features tracked** | 121 |
 | v1 | 89 |
 | v2+ | 21 |
+| **Mesh-v1** | **11** (standalone Mesh release track) |
 | Built in M1 web | 11 |
-| Spec'd, not yet built | 78 |
+| Spec'd, not yet built | 89 |
 | Explicitly deferred | 21 |
+
+### Release tracks
+
+The roadmap holds three independent release tracks:
+
+- **v1 / v2+** — the main Camp King app. v1 is in-progress; v2+ is the deferred-list set in `docs/spec/00-core.md` § Deferred to v2+.
+- **Mesh-v1** — standalone offline BLE mesh track for camping Trips, decoupled from main-app v1/v2 versioning. Captured in `docs/spec/40-offline-mesh.md`. Source brief at `docs/briefs/offline-mesh-engineering-brief.md`; patent boundary at `docs/legal/patent-claims.md`. Hard platform floor: iOS 16+, Android 12+.
+
+Each FEAT row's `Release` column carries the track marker. FEATs across tracks share the same FEAT-NNN namespace (FEAT-001..110 are main app; FEAT-111..121 are Mesh-v1).
 
 ### v1 by area
 
