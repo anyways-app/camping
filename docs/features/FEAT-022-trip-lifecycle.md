@@ -37,6 +37,7 @@ A trip moves through three states: **draft** (just created, no troops have accep
 5. **Auto-end on creator-troop deletion**: when a troop with `troops.id = trips.created_by_troop_id` is deleted, all trips it created auto-transition to `ended` with a synthetic ended_at timestamp. *(Open question 1 — alternative is "transfer creator," which requires FEAT-034.)*
 6. **Auto-end stale draft**: drafts that have been sitting unresolved for >30 days with no accepts auto-end (housekeeping). *(Open question 2.)*
 7. **Read-only archive (ended)**: members can still navigate to the trip detail, see metadata, see member roster, see the historical trip-shared contacts segment. Mutations are blocked.
+8. **Offline-active (Mesh-v1 substate of `active`)**: when the trip's `offline_mesh_enabled = true` (FEAT-021), the active state has a substate `offline-active` indicating BLE mesh is provisioned and running. Offline-active does NOT preclude online connectivity — it just means mesh is enabled. Trip start (FEAT-112) transitions `active` → `offline-active`; Trip end (active → ended) tears down mesh credentials regardless of substate. See FEAT-112 and `40-offline-mesh.md` for the full mesh lifecycle.
 
 ## Data
 

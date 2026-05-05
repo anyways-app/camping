@@ -13,6 +13,8 @@ last_reviewed: 2026-05-01
 
 A row in the per-sub-profile feature-gate matrix (FEAT-007): **Trip participation**. Default On for new sub-profiles. The leader can flip it off to exclude a sub-profile from all trip experiences entirely. The gate is the **broadest** trip-related sub-profile control; the per-trip "Trip visibility" override (FEAT-029) gives finer-grained per-trip control on top of this gate. Gate Off ⇒ no trips visible at all (Trips section hidden from navigation per FEAT-019). Gate On + per-trip visibility Off ⇒ in some trips, not this specific one.
 
+**Mesh-v1 independence note.** The Mesh send (FEAT-114) and Mesh receive (FEAT-115) gates added to FEAT-007 are independent of Trip participation. A sub-profile with `Trip participation=On` and both mesh gates off is on the trip but radio-silent on the offline mesh — this is intentional, matching the use case of "kid is on the trip but their device shouldn't transmit / receive on BLE."
+
 ## Roles & permissions
 
 - **Troop leader**: writes the gate value via per-sub-profile management (FEAT-009). Can flip at any time.

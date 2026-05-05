@@ -50,6 +50,8 @@ The leader manages a per-sub-profile **toggle matrix** that gates 15 distinct fe
    | Direct messages (FEAT-063, v2) | **Off** | DMs are deferred entirely; gate exists for v2. |
    | Slideshow / TV cast | On | Generally safe; may flip off for shared family screens. |
    | Trip participation (FEAT-030) | On | Per-trip override sits on top per FEAT-029. |
+   | Mesh send (FEAT-114, Mesh-v1) | On | Sub-profile can compose / transmit offline-mesh messages from this device. Independent of Trip participation gate — a participating sub-profile can be silenced. |
+   | Mesh receive (FEAT-115, Mesh-v1) | On | Sub-profile receives offline-mesh messages and renders them. Independent of Trip participation gate. Off effectively excludes the sub-profile from the mesh while keeping their non-mesh Trip presence intact. |
 
 ## Data
 

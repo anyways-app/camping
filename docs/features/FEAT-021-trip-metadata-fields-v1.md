@@ -59,6 +59,8 @@ The full `v1 trip metadata` schema (from `00-core.md#v1-trip-metadata`):
 | `end_date` | date | optional |
 | `cover_image_url` | text | optional |
 | `status` | enum | `draft` \| `active` \| `ended` (lifecycle-controlled) |
+| `offline_mesh_enabled` | bool | Mesh-v1 only. Default false. When true, the Trip transitions to `offline-active` on Trip start (FEAT-022 / FEAT-112) and the BLE mesh capability is provisioned at bootstrap (FEAT-111). |
+| `dictionary_version_pin` | text | Mesh-v1 only. The dictionary version (base + user extensions) pinned at Trip start; frozen for the Trip's lifetime. Only set when `offline_mesh_enabled = true`. |
 
 ## Edge cases
 

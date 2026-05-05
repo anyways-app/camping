@@ -87,6 +87,7 @@ Privacy invariant impact: introduces a new RLS surface separate from the `cards`
 - **Multi-capturer collaborative captures** (several people walking different parts of a site, merged). v2.0 is single-capturer per scene.
 - **Indoor capture** (cabins, gear sheds). v2.0 outdoor only — privacy and regulatory reasons.
 - **Sub-profile capture by default**. Default off in the feature gate matrix (FEAT-007). The leader's call.
+- **Conflation with the offline BLE mesh capability (Mesh-v1, FEAT-090..121, `40-offline-mesh.md`)**. Camp Atlas and Mesh-v1 are both "offline" features but serve different purposes: Mesh-v1 is per-Trip *ephemeral messaging* via BLE, with Trip-scoped credentials and dictionary-vocabulary text; Camp Atlas is *persistent place-owned 3DGS site captures* with cloud GPU training and Camp King ownership. They share the iOS-Pro hardware floor in places (FEAT-091 Gaussian Splatting Night Sight v2 paths) but the two systems are otherwise independent — different data models, different RLS surfaces, different lifecycles, different patent claims.
 
 ## Open questions
 

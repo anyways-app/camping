@@ -35,6 +35,7 @@ When a troop leader receives a trip invitation (FEAT-023), they can **accept**, 
      - Server updates `trip_troops (trip_id, troop_id, status='accepted', joined_by_profile_id=leader, responded_at=now)`.
      - Server inserts `trip_profile_visibility (trip_id, profile_id, visible=true)` for **every profile in the accepting troop** that has the "Trip participation" gate ON in `profile_feature_gates`. Profiles with the gate off do NOT get a visibility row, effectively excluding them from the trip.
      - If `trips.status='draft'` and this is the first accept, server transitions to `status='active'` (FEAT-022).
+     - **Mesh-v1 hook**: if `trips.offline_mesh_enabled = true` (FEAT-021), the bootstrap-credentials flow (FEAT-111) fires for every profile that is becoming a trip member with both `Mesh send` and / or `Mesh receive` gates on (FEAT-007). Each such profile is issued a per-Trip MemberID, a TripKey envelope, an Ed25519 keypair, and a copy of the dictionary version pin. Profiles with both mesh gates off do not get mesh credentials but remain Trip members for non-mesh purposes.
      - Realtime broadcast: trip detail updates with the new troop in the member roster; original inviter sees the response in their pending-invitations list.
 4. **Decline flow**:
    - Confirmation: "Decline this trip invitation? You can be re-invited later."
