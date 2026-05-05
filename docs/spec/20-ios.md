@@ -98,3 +98,53 @@ In addition to cross-platform checks in core:
 - Ambient temp is `weather_api`-sourced and labelled accordingly.
 - Daily LiDAR generation limit is enforced server-side (try 6 in a day → 6th rejected).
 - AirPlay screen mirroring keeps the slideshow running without the screen dimming.
+
+## BLE mesh (Mesh-v1 track)
+
+This section captures the iOS-specific surface for the offline BLE mesh capability scoped to Trips. The cross-platform contract lives in [`40-offline-mesh.md`](40-offline-mesh.md); this addendum covers what's iOS-only.
+
+### Hardware / OS floor
+
+- **iOS 16.0+.** Devices below this floor fall back to online-only Trips (no offline capability offered, clear UX message).
+- Required for: CoreBluetooth maturity, MultipeerConnectivity stability for iPhone-group mode.
+
+### API surface
+
+- **CoreBluetooth** — central + peripheral roles for the Mixed-mode (service-UUID-encoded) baseline:
+  - `CBPeripheralManager` for advertising (`startAdvertising(_:)`).
+  - `CBCentralManager` for scanning (`scanForPeripherals(withServices:options:)`).
+  - Service UUIDs as the payload carrier per FEAT-113 wire protocol.
+- **MultipeerConnectivity** — used for the iPhone-group optimization mode (FEAT-120). Richer transport, larger payloads. Falls back to Mixed mode if any Android peer joins.
+- **CryptoKit** — TripKey AES-CCM (`AES.GCM` is the iOS-canonical AEAD; AES-CCM availability via `CryptoKit.SymmetricKey` + custom CCM via `CommonCrypto` is the v1 path; see FEAT-113 OQ on AEAD-mode parity with Android). Ed25519 signatures via `Curve25519.Signing`. X25519 sealed-box via `Curve25519.KeyAgreement` + AES-GCM.
+- **Keychain Services** (`Security.framework` via `kSecAttr…`) for at-rest persistence of TripKey + Ed25519 private key.
+
+### Background-mode behaviour (load-bearing)
+
+iOS strips manufacturer data and moves service UUIDs into a special **overflow area** when the app is backgrounded. Android peers cannot decode the overflow representation. Practical consequence: **backgrounded iOS devices effectively become iOS-only nodes.** Either the product accepts this (the brief flags this as ambiguity 4 / FEAT-120 OQ 8), OR the Trip-active UX keeps the app foregrounded — a screen-on persistent indicator is the likely v1 path.
+
+`Info.plist` `UIBackgroundModes`: include `bluetooth-central` and `bluetooth-peripheral`. Even with these, the overflow-area constraint above still applies for cross-platform interop in background.
+
+### Permissions / Info.plist usage descriptions
+
+Add to `Info.plist`:
+
+- `NSBluetoothAlwaysUsageDescription` (iOS 13+) — required for any Bluetooth use. User-facing string: *"Camp King uses Bluetooth to keep your Trip group connected when there's no internet at the campsite."*
+- `NSBluetoothPeripheralUsageDescription` (iOS 12 and earlier; for forward compatibility) — same rationale string.
+- Background mode entitlements as above.
+
+No additional permission strings needed beyond the existing FEAT-074..076 location / camera / microphone / contacts entries.
+
+### Battery mode (FEAT-120) on iOS
+
+iOS gives less control over scan duty cycle than Android. The "Minimal" and "Boost" modes will look slightly different across platforms (FEAT-120 OQ 9):
+
+- **Minimal:** rely on `CBCentralManager` default scan with `CBCentralManagerScanOptionAllowDuplicatesKey: false`; advertising at 2s ON / 28s OFF as a software-controlled duty cycle on top of the OS's own throttling.
+- **Boost:** `CBCentralManagerScanOptionAllowDuplicatesKey: true`; advertising at 2s ON / 8s OFF. Still subject to the OS's eventual throttling if backgrounded.
+
+### Acceptance test additions
+
+Cross-platform acceptance tests in `00-core.md` § Mesh-specific verification apply. iOS-only additions:
+
+- Verify `Info.plist` Bluetooth-usage strings render correctly at first prompt on iOS 16, 17, and the latest iOS major.
+- Verify backgrounded iOS device stops advertising in a way Android can decode (overflow-area observation).
+- Verify Keychain persistence survives app reinstall *without* iCloud Keychain enabled (TripKey should be local-only).

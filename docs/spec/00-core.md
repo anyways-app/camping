@@ -143,6 +143,19 @@ A sub-profile's "**Forward outside the troop**" gate is **not** loosened by trip
 - The "Share with this trip" toggle is the sole mechanism for exposing contacts across troops on a trip. Master contact lists remain leader-private.
 - Trip-shared contacts are scoped to the trip's active window only. When a trip ends, its shared contacts no longer enter members' mutual-discovery pools and the trip-contacts segment becomes read-only in the archive view.
 
+### Offline mesh mode (Mesh-v1 track)
+
+A Trip can run **offline-active** at the campsite via a BLE mesh capability that ships on a standalone "Mesh" track (Mesh-v1, Mesh-v2…) decoupled from main-app v1/v2 versioning. The full spec is in [`40-offline-mesh.md`](40-offline-mesh.md). The cross-platform binding invariants:
+
+- **TripKey scope = a single Trip.** Per-Trip 32-byte symmetric key generated server-side; AES-CCM encryption on every mesh message.
+- **Revocation = silent-delete + coordinated rotation.** A `REVOKE_AND_ROTATE` broadcast simultaneously instructs an excluded device to delete credentials AND delivers a new TripKey to every remaining member via per-recipient sealed-box envelopes. Forward secrecy is guaranteed by the rotation regardless of the excluded device's cooperation.
+- **Key-epoch tagged on every message.** Receivers reject messages from epochs older than (current − 1).
+- **Dictionary frozen at Trip start.** A 1,024-entry base dictionary plus up to 256 user-extension entries pinned at Trip start; no free-text in offline mode.
+- **Group cap = 20 devices/Trip in Mesh-v1** (raised to 100 in Mesh-v2).
+- **Hard platform floor: iOS 16+ and Android 12+.** Older devices fall back to online-only.
+
+Offline-active is a substate of `active` (FEAT-022); offline-active does not preclude online connectivity, it just means mesh is enabled. Trip-end (FEAT-022 ended) tears down mesh credentials.
+
 ### v1 trip metadata
 
 Customizable per trip; only `name` is required.
@@ -392,10 +405,23 @@ Run on each client before declaring v1 done. Each named "profile" below belongs 
 25. Confirm a trip-shared contact appears as a *match* (dark-green direct-contact border) only when both that contact and the viewing trip member have uploaded each other and are both registered — not merely because the contact is in the trip-shared list.
 26. Trip lifecycle: leader A marks the trip `ended`. Confirm no new invites, contacts, or shares are accepted; existing trip-shared contacts remain visible historically to participants in a read-only archive.
 
+### Mesh-specific verification (Mesh-v1 track)
+
+Run on each platform (iOS 16+, Android 12+) before declaring Mesh-v1 done. Full detail in [`40-offline-mesh.md`](40-offline-mesh.md) § Mesh-specific verification.
+
+27. **Battery test** — 10-device Trip, Minimal mode, 8 hours simulated camping. p95 device battery drain ≤ 24% (3%/hr idle).
+28. **Range test** — 5 devices spread across 150m line-of-sight at a real campsite. Direct message from device 1 to device 5 delivered within 300s p95 via mesh relay.
+29. **Group churn test** — During an active Trip, 3 of 10 devices power off and 2 new devices join. Mesh continues operating; new devices receive backlogged broadcasts within their TTL window.
+30. **Revocation test** — Account holder revokes member B. Member B's device deletes credentials within 60s of receipt and shows no user-visible indication. Surviving Trip continues to operate. **Forward-secrecy verification:** member B's device, instrumented to ignore the delete instruction and retain the old TripKey, must be unable to (a) decrypt any subsequent Trip traffic or (b) inject any messages accepted by remaining members.
+31. **Cross-platform test** — 5 iOS + 5 Android devices in one Trip, Mixed mode, all message types verified bidirectionally.
+32. **Persistence test** — App force-killed mid-Trip on 3 devices. On relaunch, queued messages resume delivery without user action.
+
 Automated test floor:
 - Unit tests for the contact-matching algorithm (mutual-only + one-hop registered-only invariants, profile-pair-keyed).
 - Unit tests for the troop-shared-contacts visibility rule (leader toggle on → sibling profiles see; off → siblings do not see; toggling does not leak unshared contacts; one-hop grants do not transfer across siblings).
 - Unit tests for the trip-shared-contacts visibility rule (visible only to trip members across joined troops; invisible to sub-profiles whose leader has set `trip_profile_visibility = false`; goes read-only when trip ends).
 - Unit tests for the per-sub-profile feature-gate matrix (block / report always on regardless of toggles; defaults match the spec table; "Forward outside the troop = off" still blocks forwarding to fellow trip members).
 - Snapshot / visual tests for each of the 7 border kind + pattern combos.
+- Mesh-v1 cryptography unit tests: TripKey lifecycle (bootstrap / persist / load / rotate / re-persist); key-epoch monotonic increment + stale-epoch rejection; sealed-box envelope round-trip; dictionary version-pin invariance during offline-active.
+- Mesh-v1 platform unit tests: foreground-service lifecycle on each platform (start / persist through screen-off / terminate cleanly on Trip end).
 - E2E: Playwright (web), Detox or Maestro (mobile).

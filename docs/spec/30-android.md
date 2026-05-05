@@ -78,3 +78,59 @@ In addition to cross-platform checks in core:
 - On a phone **without** ambient-temp hardware: card shows `ambient_temp_source = weather_api` (verify with Pixel or a non-Samsung-flagship device).
 - Google Cast screen mirroring keeps the slideshow running without dimming.
 - Health Connect prompt shown on first trail-mode start (Android 14+).
+
+## BLE mesh (Mesh-v1 track)
+
+This section captures the Android-specific surface for the offline BLE mesh capability scoped to Trips. The cross-platform contract lives in [`40-offline-mesh.md`](40-offline-mesh.md); this addendum covers what's Android-only.
+
+### Hardware / OS floor
+
+- **Android 12+ (API 31+).** Devices below this floor fall back to online-only Trips (no offline capability offered, clear UX message).
+- Required for: the runtime permission model `BLUETOOTH_SCAN` / `BLUETOOTH_ADVERTISE` / `BLUETOOTH_CONNECT` with the `neverForLocation` flag, and modern foreground-service semantics.
+
+### API surface
+
+- **`BluetoothLeAdvertiser`** for advertising in the Mixed-mode (service-UUID-encoded) baseline. `AdvertiseSettings` set to `ADVERTISE_MODE_LOW_LATENCY` for Boost mode; `ADVERTISE_MODE_BALANCED` (or LOW_POWER) for Minimal.
+- **`BluetoothLeScanner`** for scanning. `ScanSettings.SCAN_MODE_LOW_LATENCY` for Boost; `SCAN_MODE_LOW_POWER` for Minimal.
+- **BLE 5 extended advertising** path for Android-group optimization mode (FEAT-120). `AdvertisingSetCallback` + `AdvertisingSetParameters` with `setLegacyMode(false)` enables ~255-byte payloads. Falls back to Mixed mode if any iOS peer or unsupported Android joins.
+- **Foreground service** (`Service.startForeground(...)`) — required for sustained scanning / advertising on Android 12+. Must show a persistent notification ("Camp King is keeping your Trip group connected"). Service type per Android 14: `foregroundServiceType="connectedDevice"` in the manifest.
+- **Conscrypt / `javax.crypto`** for AES-CCM. Ed25519 via Conscrypt (Android 11+) or `BouncyCastle` (older — moot here since floor is API 31). X25519 sealed-box via Conscrypt KeyAgreement + AES-GCM.
+- **Android Keystore** for at-rest persistence of TripKey + Ed25519 private key (`KeyGenParameterSpec.Builder` with `setUserAuthenticationRequired(false)` since unattended re-keying must work; FEAT-119 OQ on UA-required hardening).
+
+### Permissions / manifest entries
+
+Add to `AndroidManifest.xml`:
+
+- `<uses-permission android:name="android.permission.BLUETOOTH_SCAN" android:usesPermissionFlags="neverForLocation" tools:targetApi="s" />`
+- `<uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />`
+- `<uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />`
+- `<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />`
+- `<uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE" />` (Android 14+)
+- The existing `BLUETOOTH` and `BLUETOOTH_ADMIN` for Android 11 and earlier (moot at API 31 floor; declare for forward-compat manifest cleanliness).
+
+The `neverForLocation` flag on `BLUETOOTH_SCAN` is **required** to avoid prompting the user for fine-location permission alongside Bluetooth — the mesh does not need device location for the scan itself.
+
+User-facing rationale strings (in pre-prompt UI):
+- *"Camp King uses Bluetooth to keep your Trip group connected when there's no internet at the campsite. We do not use Bluetooth for advertising or to track your location."*
+
+### Battery mode (FEAT-120) on Android
+
+Android exposes more granular control than iOS:
+
+- **Minimal:** `ADVERTISE_MODE_BALANCED` + `SCAN_MODE_LOW_POWER`; advertising at 2s ON / 28s OFF as a software-controlled duty cycle.
+- **Boost:** `ADVERTISE_MODE_LOW_LATENCY` + `SCAN_MODE_LOW_LATENCY`; advertising at 2s ON / 8s OFF.
+
+Manufacturer quirks to test (FEAT-120 OQ 9):
+- **Samsung One UI** historically aggressive about killing background scanners; foreground service mitigates but Doze-mode behaviour varies by OEM.
+- **Xiaomi MIUI** has notoriously restrictive battery-saver defaults that suppress notifications and background work; user may need to manually whitelist the app in Settings → Battery saver.
+- **Pixel** is the reference platform; least quirky.
+
+### Acceptance test additions
+
+Cross-platform acceptance tests in `00-core.md` § Mesh-specific verification apply. Android-only additions:
+
+- Verify foreground-service notification is shown the entire duration of an active Trip; user dismissing the notification does not stop the service.
+- Verify `BLUETOOTH_SCAN` runtime prompt shows the rationale string and does **not** chain into a fine-location prompt (the `neverForLocation` flag).
+- Verify foreground-service survives Doze-mode entries (overnight idle).
+- Verify Samsung Galaxy + Xiaomi Mi devices: foreground-service is not killed by manufacturer battery savers within the 8-hour acceptance window. Document any required user-facing "please whitelist this app" guidance per OEM.
+- Verify Keystore persistence survives app reinstall (TripKey and Ed25519 private key are not migrated to the new install — bootstrap re-issues, which exercises FEAT-111).
